@@ -1,0 +1,89 @@
+/* Tạo background gradient cho toàn bộ trang */
+.login-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("./background.jpg");
+}
+
+/* Container chứa form login với nền trong suốt và hiệu ứng blur */
+.login-container {
+  background: transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  width: 450px;
+  text-align: center;
+}
+
+/* Tiêu đề */
+.login-title {
+  margin-bottom: 24px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Các item của form có khoảng cách hợp lý */
+.login-form .ant-form-item {
+  margin-bottom: 16px;
+}
+
+/* Tùy chỉnh style cho input và input password */
+.login-input,
+.ant-input,
+.ant-input-password input,
+.ant-input-password .ant-input {
+  background: transparent !important;
+  padding: 10px;
+  color: #fff !important;
+  border-radius: 30px;
+  font-size: 16px;
+  outline: none !important;
+  text-shadow: none !important;
+}
+
+.login-form .ant-input::placeholder,
+.login-form .ant-input-password input::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.login-input:focus,
+.ant-input:focus,
+.ant-input-password input:focus {
+  border-color: #fff !important;
+}
+
+/* Nút Login */
+.login-button {
+  height: 40px;
+  font-size: 16px;
+  border-radius: 30px;
+  background: white !important;
+  color: black !important;
+  border: none !important;
+  padding: 10px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.login-button:hover {
+  opacity: 0.8;
+}
+
+.login-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Canh lề cho checkbox */
+.checkbox-item {
+  text-align: left;
+}
+
+.checkbox-item label {
+  color: #fff !important;
+}
