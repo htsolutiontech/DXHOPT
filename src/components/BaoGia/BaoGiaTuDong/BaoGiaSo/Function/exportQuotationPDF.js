@@ -1,10 +1,10 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import getImageBase64 from '../../../utils/quotation/getImageBase64';
-import numberToVietnameseWords from '../../../utils/quotation/numberToVietnameseWords';
-import { getUnitName } from '../../../utils/convert/unitCodes';
-import { getCountryName } from '../../../utils/convert/countryCodes';
-import { getProductDescription } from '../../../utils/convert/productDescriptionsExcel';
+import getImageBase64 from '../../../../utils/quotation/getImageBase64';
+import numberToVietnameseWords from '../../../../utils/quotation/numberToVietnameseWords';
+import { getUnitName } from '../../../../utils/convert/unitCodes';
+import { getCountryName } from '../../../../utils/convert/countryCodes';
+import { getProductDescription } from '../../../../utils/convert/productDescriptionsExcel';
 
 pdfMake.vfs = pdfFonts.vfs;
 

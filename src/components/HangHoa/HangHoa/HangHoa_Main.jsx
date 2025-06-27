@@ -7,8 +7,7 @@ import { Modal, message } from 'antd';
 import '../../utils/css/Custom-Table.css';
 import '../../utils/css/Custom-Button.css';
 import '../../utils/css/Custom-Filter.css';
-// Hàm gọi API
-import { fetchData } from '../../utils/api/apiHandler';
+
 // Component phân trang
 import PaginationControl from '../../utils/format/PaginationControl';
 // Hàm reset các bộ lọc
@@ -25,6 +24,7 @@ import HangHoa_Export from './Function/HangHoa_Export';
 import HangHoaFilter from './Function/HangHoa_Filter';
 import { filterHangHoa } from "./Function/HangHoa_FilterLogic";
 import HangHoaTableView from './View/HangHoa_TableView';
+import { fetchData } from './View/HangHoa_apiHandler';
 import EditProduct from './Function/HangHoa_Update';
 import AddProduct from './Function/HangHoa_Add';
 import RemoveProduct from './Function/HangHoa_Delete';
@@ -57,7 +57,7 @@ const BangHangHoa = () => {
     // Gọi API lấy danh sách khách hàng bằng hàm tái sử dụng
     const fetchProducts = () => {
         fetchData({
-            endpoint: '/products', // endpoint API
+            endpoint: '/products',
             setData,                // set state dữ liệu
             setLoading,             // set trạng thái loading
         });

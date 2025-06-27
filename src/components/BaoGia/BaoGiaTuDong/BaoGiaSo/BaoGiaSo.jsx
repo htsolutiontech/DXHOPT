@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Tabs, Button } from 'antd';
+import { Tabs, Button, message, Modal } from 'antd';
 import BaoGiaThongTinForm from './BaoGiaThongTinForm';
 import BaoGiaHangHoaTable from './BaoGiaHangHoaTable';
 import { DownloadOutlined } from '@ant-design/icons';
-import { exportQuotationWord } from './exportQuotationWord';
-import { exportQuotationPDF } from './exportQuotationPDF';
+import { exportQuotationWord } from './Function/exportQuotationWord';
+import { exportQuotationPDF } from './Function/exportQuotationPDF';
+import { handleCreateQuotation } from './Function/BaoGiaSo_Add_BG';
+import { handleCreateQuotationDetails } from './Function/BaoGiaSo_Add_CTBG';
 
 const BaoGiaSo = () => {
   const [thongTin, setThongTin] = useState({});
@@ -56,8 +58,31 @@ const BaoGiaSo = () => {
     exportQuotationWord(thongTin, hangHoa, DEFAULT_DIEU_KIEN);
   };
 
-  const handleExportPDF = () => {
-    exportQuotationPDF(thongTin, hangHoa, DEFAULT_DIEU_KIEN);
+  // Gọi hàm tạo báo giá và chi tiết báo giá trước khi xuất PDF
+  const handleExportPDF = async () => {
+    try {
+      await exportQuotationPDF(thongTin, hangHoa, DEFAULT_DIEU_KIEN);
+
+      setTimeout(() => {
+        Modal.confirm({
+          title: 'Xác nhận lưu file PDF',
+          content: 'Bạn đã lưu file PDF thành công chưa?\nNhấn OK để lưu dữ liệu vào hệ thống.',
+          okText: 'OK',
+          cancelText: 'Hủy',
+          async onOk() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            await handleCreateQuotation(thongTin, hangHoa, userData);
+            await handleCreateQuotationDetails(thongTin.so_bao_gia, hangHoa);
+            message.success('Đã lưu dữ liệu báo giá vào hệ thống!');
+          },
+          onCancel() {
+            message.info('Bạn đã hủy lưu dữ liệu vào hệ thống.');
+          },
+        });
+      }, 1000);
+    } catch (error) {
+      message.error('Lưu báo giá thất bại: ' + error.message);
+    }
   };
 
   return (

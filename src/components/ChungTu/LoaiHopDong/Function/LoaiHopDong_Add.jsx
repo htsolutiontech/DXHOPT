@@ -15,6 +15,9 @@ const AddContractType = ({ onCancel, onSuccess, disabled }) => {
   const [newMaLHD, setNewMaLHD] = useState('');
   const [accounts, setAccounts] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
       fetchMaxSTT();
       fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng').finally(() => setFetchLoading(false));
@@ -34,6 +37,7 @@ const AddContractType = ({ onCancel, onSuccess, disabled }) => {
           ma_loai_hop_dong: generatedMaLHD,
           tinh_trang: 'Hoạt động',
           ngay_cap_nhat: moment(),
+          nguoi_cap_nhat: currentUser?.ma_nguoi_dung || undefined,
         });
   
       } catch (error) {
@@ -106,7 +110,7 @@ const AddContractType = ({ onCancel, onSuccess, disabled }) => {
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item name="nguoi_cap_nhat" label="Người cập nhật" rules={[{ required: true }]}>
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn người cập nhật">
+                  <Select disabled>
                     {accounts.map(account => (
                       <Option key={account.ma_nguoi_dung} value={account.ma_nguoi_dung}>
                         {account.ho_va_ten}

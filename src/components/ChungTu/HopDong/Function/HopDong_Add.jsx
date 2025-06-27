@@ -16,11 +16,17 @@ const AddContract = ({ onCancel, onSuccess, disabled }) => {
   const [accounts, setAccounts] = useState([]);
   const [contract_types, setContract_Types] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng').finally(() => setFetchLoading(false));
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/contract-types', setContract_Types, 'Không thể tải danh sách loại hàng').finally(() => setFetchLoading(false));
-    form.setFieldsValue({ngay_ky_hop_dong: moment()});
-    form.setFieldsValue({ngay_bat_dau: moment()});
+    form.setFieldsValue({
+      ngay_ky_hop_dong: moment(),
+      ngay_bat_dau: moment(),
+      nguoi_tao: currentUser?.ma_nguoi_dung || undefined,
+    });
   }, []);
 
   const onFinish = async (values) => {
@@ -149,7 +155,7 @@ const AddContract = ({ onCancel, onSuccess, disabled }) => {
               </Col>
               <Col span={12}>
                 <Form.Item name="nguoi_tao" label="Người tạo" rules={[{ required: true }]}>
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn người tạo">
+                  <Select disabled>
                     {accounts.map(account => (
                       <Option key={account.ma_nguoi_dung} value={account.ma_nguoi_dung}>
                         {account.ho_va_ten}

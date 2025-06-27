@@ -58,7 +58,8 @@ const BaoGiaThongTinForm = ({ onChange }) => {
     'Giá kế hoạch',
     'Bệnh viện Tư',
     'Bệnh viện Công',
-    'Công ty Thầu'
+    'Công ty Thầu',
+    'Tập Đoàn Hoàn Mỹ',
   ];
 
   const handleValuesChange = (changed, values) => {
@@ -76,6 +77,9 @@ const BaoGiaThongTinForm = ({ onChange }) => {
           break;
         case 'Công ty Thầu':
           hs = [47000, 48000, 49000, 50000];
+          break;
+        case 'Tập Đoàn Hoàn Mỹ':
+          hs = [47000];
           break;
         default:
           hs = [];
@@ -108,7 +112,7 @@ const BaoGiaThongTinForm = ({ onChange }) => {
         <Row gutter={16}>
           <Col span={6}>
             <Form.Item label="Số báo giá" name="so_bao_gia" rules={[{ required: true }]}>
-              <Input />
+              <Input style={{ width: '100%' }} />
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -118,60 +122,92 @@ const BaoGiaThongTinForm = ({ onChange }) => {
           </Col>
           <Col span={6}>
             <Form.Item label="Hãng chủ sở hữu" name="hang_chu_so_huu" rules={[{ required: true }]}>
-              <Select>
+              <Select style={{ width: '100%' }}>
                 {hangChuSoHuu.map(h => <Option key={h} value={h}>{h}</Option>)}
               </Select>
             </Form.Item>
           </Col>
           <Col span={6}>
             <Form.Item label="Price List" name="price_list" rules={[{ required: true }]}>
-              <Select>
+              <Select style={{ width: '100%' }}>
                 {priceLists.map(pl => <Option key={pl} value={pl}>{pl}</Option>)}
               </Select>
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={16}>
-          <Col span={8}>
+          <Col span={9}>
             <Form.Item label="Tiêu đề báo giá" name="tieu_de" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col> 
-          <Col span={8}>
+          <Col span={5}>
             <Form.Item label="Đối tượng báo giá" name="doi_tuong_bao_gia" rules={[{ required: true }]}>
               <Select>
                 {doiTuongBaoGia.map(dt => <Option key={dt} value={dt}>{dt}</Option>)}
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={5}>
             <Form.Item label="Hệ số" name="he_so" rules={[{ required: true }]}>
               <Select>
                 {heSoList.map(hs => <Option key={hs} value={hs}>{hs}</Option>)}
               </Select>
             </Form.Item>
           </Col>
+          <Col span={5}>
+            <Form.Item label="Số điện thoại" name="sdt">
+              <Input />
+            </Form.Item>
+          </Col> 
         </Row>
         <Row gutter={16}>
-          <Col span={12}>
+          <Col span={6}>
             <Form.Item label="Kính gửi" name="kinh_gui" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={6}>
             <Form.Item label="Tên file báo giá" name="ten_file_bao_gia" rules={[{ required: true }]}>
               <Input />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label="Loại báo giá" name="loai_bao_gia" initialValue="Báo giá số">
+              <Input disabled />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label="Tình trạng báo giá" name="tinh_trang" initialValue="Đã tạo báo giá">
+            <Select>
+              <Option value="Đã tạo báo giá">Đã tạo báo giá</Option>
+              <Option value="Đã xem báo giá">Đã xem báo giá</Option>
+              <Option value="Thành công">Thành công</Option>
+              <Option value="Hủy">Hủy</Option>
+            </Select>
+          </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item label="Nội dung báo giá" name="noi_dung_bao_gia" rules={[{ required: true }]}>
+              <Input.TextArea rows={2} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Điều kiện thương mại" name="dieu_kien_thuong_mai" rules={[{ required: true }]}>
+              <Input.TextArea rows={2} />
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item label="Nội dung báo giá" name="noi_dung_bao_gia">
+            <Form.Item label="Người liên hệ" name="nguoi_lien_he">
               <Input.TextArea rows={2} />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Điều kiện thương mại" name="dieu_kien_thuong_mai">
+            <Form.Item label="Ghi chú" name="ghi_chu">
               <Input.TextArea rows={2} />
             </Form.Item>
           </Col>

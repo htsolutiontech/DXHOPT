@@ -172,7 +172,7 @@ const BangLoaiHang = () => {
             {deletingProductType && (
                 <RemoveProductType
                     product_typeId={deletingProductType.ma_loai_hang}
-                    product_typeName={deletingProductType.ma_loai_hang}
+                    product_typeName={deletingProductType.ten_loai_hang}
                     onSuccess={() => {
                         setDeletingProductType(null);
                         fetchProductTypes();

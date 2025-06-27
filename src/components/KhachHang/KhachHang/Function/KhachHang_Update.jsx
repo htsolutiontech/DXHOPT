@@ -17,6 +17,9 @@ const Editcustomer = ({ customerId, onCancel, onSuccess }) => {
   const [customerData, setCustomerData] = useState(null);
   const [accounts, setAccounts] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     if (customerId) fetchCustomerData(customerId);
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng');
@@ -29,6 +32,8 @@ const Editcustomer = ({ customerId, onCancel, onSuccess }) => {
       const customer = allCustomers.find(item => item.ma_khach_hang === id);
       if (!customer) throw new Error(`Không tìm thấy khách hàng với mã: ${id}`);
       if (customer.ngay_them_vao) customer.ngay_them_vao = moment(customer.ngay_them_vao);
+      // Gán luôn người cập nhật là user hiện tại
+      customer.nguoi_phu_trach = currentUser?.ma_nguoi_dung || undefined;
       setCustomerData(customer);
       form.setFieldsValue(customer);
       message.success(`Đã tải thông tin khách hàng: ${customer.ten_khach_hang}`);

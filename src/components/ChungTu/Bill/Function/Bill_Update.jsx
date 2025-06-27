@@ -15,6 +15,9 @@ const EditBill = ({ billId, onCancel, onSuccess }) => {
   const [billData, setBillData] = useState(null);
   const [accounts, setAccounts] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     if (billId) fetchBillData(billId);
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng');
@@ -27,6 +30,10 @@ const EditBill = ({ billId, onCancel, onSuccess }) => {
       const bill = allBills.find(item => item.ma_bill === id);
       if (!bill) throw new Error(`Không tìm thấy bill với mã: ${id}`);
       if (bill.ngay_cap_nhat) bill.ngay_cap_nhat = moment(bill.ngay_cap_nhat);
+
+      // Gán luôn người cập nhật là user hiện tại
+      bill.nguoi_cap_nhat = currentUser?.ma_nguoi_dung || undefined;
+
       setBillData(bill);
       form.setFieldsValue(bill);
       message.success(`Đã tải thông tin bill: ${bill.ma_bill}`);
@@ -89,7 +96,7 @@ const EditBill = ({ billId, onCancel, onSuccess }) => {
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item name="nguoi_cap_nhat" label="Người cập nhật" rules={[{ required: true }]}>
-                    <Select showSearch optionFilterProp="children" placeholder="Chọn người cập nhật">
+                    <Select disabled>
                       {accounts.map(account => (
                         <Option key={account.ma_nguoi_dung} value={account.ma_nguoi_dung}>
                           {account.ho_va_ten}

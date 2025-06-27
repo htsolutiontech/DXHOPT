@@ -3,7 +3,7 @@ import { Upload, Button, message, Table, Modal, Alert, Divider, Spin } from 'ant
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import { fetchPreviewData, renderMaHang, renderSoLuongBaoGia } from './BaoGiaSo_ImportRender';
 import * as XLSX from 'xlsx';
-import '../../../utils/css/Custom-Import.css';
+import '../../../../utils/css/Custom-Import.css';
 
 const { Dragger } = Upload;
 

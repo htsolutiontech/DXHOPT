@@ -199,6 +199,7 @@ export const validateData = (
       { field: 'trong_luong_tinh', label: 'Trọng lượng tịnh', regex: /^\d+([.,]\d+)?$/ },
       { field: 'gia_thuc', label: 'Giá thực', regex: /^\d+([.,]\d+)?$/ },
       { field: 'gia_tri_hop_dong', label: 'Giá trị hợp đồng', regex: /^\d+([.,]\d+)?$/ },
+      { field: 'tong_tri_gia', label: 'Tổng trị giá', regex: /^\d+([.,]\d+)?$/ },
     ];
     numberFields.forEach(({ field, label, regex }) => {
       if (item[field] !== undefined && item[field] !== null && item[field] !== '') {
@@ -209,7 +210,7 @@ export const validateData = (
       }
     });
 
-    // Kiểm tra định dạng email và số điện thoại
+    // Kiểm tra định dạng email
     if (item.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(item.email)) {
       itemErrors.push('Email không đúng định dạng');
     }

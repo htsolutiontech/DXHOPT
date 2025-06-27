@@ -6,7 +6,7 @@ import { getProductDescription } from '../../../utils/convert/productDescription
 import { getStockByMaHang } from '../../../utils/inventory/getStockByMaHang';
 import { fetchAndSetList } from '../../../utils/api/fetchHelpers';
 import { UploadOutlined } from '@ant-design/icons';
-import BaoGiaSo_Import from './BaoGiaSo_Import';
+import BaoGiaSo_Import from './Function/BaoGiaSo_Import';
 import '../../../utils/css/Custom-Button.css';
 
 const { Option } = Select;

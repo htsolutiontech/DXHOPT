@@ -6,8 +6,8 @@ export function filterXuatKho(data, { searchTerm, product_typeFilter, accountFil
     return data.filter(item => {
       const matchesSearch =
         !searchTerm ||
-        normalizeString(item.ma_hang).includes(normalizedSearch) ||
-        normalizeString(item.customers?.ten_khach_hang).includes(normalizedSearch);
+        normalizeString(item.ma_hang || '').includes(normalizedSearch) ||
+        normalizeString(item.customers?.ten_khach_hang || '').includes(normalizedSearch);
 
       const matchesProductType =
         product_typeFilter === 'all' || item.product?.product_type?.ten_loai_hang === product_typeFilter;

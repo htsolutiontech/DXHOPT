@@ -6,6 +6,8 @@ import { message } from 'antd';
 const userFields = ['nguoi_phu_trach', 'nguoi_cap_nhat', 'nguoi_lap_don', 'nguoi_tao'];
 const productTypeFields = ['ten_loai_hang'];
 const contractTypeFields = ['loai_hop_dong'];
+const quotationTypeFields = ['loai_bao_gia'];
+const quotationStatusFields = ['trang_thai_bao_gia'];
 const supplierFields = ['ten_nha_cung_cap'];
 const warehouseFields = ['ten_kho'];
 const customerFields = ['ten_khach_hang'];
@@ -23,6 +25,7 @@ const processSpecialField = (field, value) => {
     'trong_luong_tinh', 'gia_thuc', 'gia_tri_hop_dong', 'so_luong_nhap',
     'so_luong_xuat', 'so_luong', 'so_luong_lo_1', 'so_luong_lo_2',
     'so_luong_lo_3', 'so_luong_lo_4', 'so_luong_lo_5', 'so_luong_hang_chua_ve',
+    'tong_tri_gia'
   ];
   if (numericFields.includes(field)) {
     if (value !== null && /^\d+([.,]\d+)?$/.test(value.toString().replace(/,/g, '.'))) {
@@ -74,6 +77,20 @@ const mapTenLoaiHopDongToMaLoaiHopDong = (tenLoaiHopDong, contract_types = []) =
   return contract_type ? contract_type.ma_loai_hop_dong : null;
 };
 
+// Ánh xạ tên loại báo giá sang mã loại báo giá
+const mapLoaiBaoGiaToMaLoaiBaoGia = (LoaiBaoGia, quotation_types = []) => {
+  if (!Array.isArray(quotation_types)) return null;
+  const quotation_type = quotation_types.find(qt => qt.loai_bao_gia === LoaiBaoGia);
+  return quotation_type ? quotation_type.ma_loai_bao_gia : null;
+};
+
+// Ánh xạ tên trạng thái báo giá sang mã trạng thái báo giá
+const mapTrangThaiBaoGiaToMaTrangThaiBaoGia = (TrangThaiBaoGia, quotation_statuses = []) => {
+  if (!Array.isArray(quotation_statuses)) return null;
+  const quotation_status = quotation_statuses.find(qs => qs.trang_thai_bao_gia === TrangThaiBaoGia);
+  return quotation_status ? quotation_status.ma_trang_thai_bao_gia : null;
+};
+
 /**
  * Xử lý file Excel được tải lên và chuyển đổi dữ liệu.
  * @param {File} file - File Excel được tải lên.
@@ -96,6 +113,8 @@ export const handleFileUpload = (file, {
   contract_types,
   contracts,
   orders,
+  quotation_types,
+  quotation_statuses,
   defaultFields = {},
   mode = 'hanghoa'
 }) => {
@@ -161,7 +180,7 @@ export const handleFileUpload = (file, {
             const maNguoiDung = mapHoVaTenToMaNguoiDung(value, accounts);
             item[apiField] = maNguoiDung || null;
             if (!maNguoiDung && value) item[getInvalidKey(apiField)] = true;
-          }
+          } // Xử lý các trường loại hàng
           else if (productTypeFields.includes(apiField)) {
             if (mode === 'hanghoa') {
               const maLoaiHang = mapTenLoaiHangToMaLoaiHang(value, product_types);
@@ -198,7 +217,7 @@ export const handleFileUpload = (file, {
               const exists = orders && orders.some(o => o.so_don_hang === value);
               if (!exists && value) item.invalidSoXacNhanDonHang = true;
             }
-          }
+          } // Xử lý các trường nhà cung cấp
           else if (supplierFields.includes(apiField)) {
             if (mode === 'hanghoa' || mode === 'nhapkho') {
               const maNhaCungCap = mapTenNhaCungCapToMaNhaCungCap(value, suppliers);
@@ -207,7 +226,7 @@ export const handleFileUpload = (file, {
             } else if (mode === 'nhacungcap') {
               item[apiField] = value;
             }
-          }
+          } // Xử lý các trường khách hàng
           else if (customerFields.includes(apiField)) {
             if (mode === 'xuatkho' || mode === 'chitietdonhang') {
               const maKhachHang = mapTenKhachHangToMaKhachHang(value, customers);
@@ -216,7 +235,7 @@ export const handleFileUpload = (file, {
             } else if (mode === 'khachhang') {
               item[apiField] = value;
             }
-          }
+          } // Xử lý các trường loại hợp đồng
           else if (contractTypeFields.includes(apiField)) {
             if (mode === 'hopdong') {
               const maLoaiHopDong = mapTenLoaiHopDongToMaLoaiHopDong(value, contract_types);
@@ -225,7 +244,25 @@ export const handleFileUpload = (file, {
             } else if (mode === 'loaihopdong') {
               item[apiField] = value;
             }
-          }
+          } // Xử lý các trường loại báo giá
+          else if (quotationTypeFields.includes(apiField)) {
+            if (mode === 'baogia') {
+              const maLoaiBaoGia = mapLoaiBaoGiaToMaLoaiBaoGia(value, quotation_types);
+              item[apiField] = maLoaiBaoGia || null;
+              if (!maLoaiBaoGia && value) item[getInvalidKey(apiField)] = true;
+            } else if (mode === 'loaibaogia') {
+              item[apiField] = value;
+            }
+          } // Xử lý các trường trạng thái báo giá
+          else if (quotationStatusFields.includes(apiField)) {
+            if (mode === 'baogia') {
+              const maTrangThaiBaoGia = mapTrangThaiBaoGiaToMaTrangThaiBaoGia(value, quotation_statuses);
+              item[apiField] = maTrangThaiBaoGia || null;
+              if (!maTrangThaiBaoGia && value) item[getInvalidKey(apiField)] = true;
+            } else if (mode === 'trangthaibaogia') {
+              item[apiField] = value;
+            }
+          } // Xử lý các trường kho
           else if (warehouseFields.includes(apiField)) {
             if (mode === 'nhapkho' || mode === 'xuatkho') {
               const maKho = mapTenKhoToMaKho(value, warehouses);

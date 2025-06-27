@@ -21,6 +21,9 @@ const AddOrderDetail = ({ onCancel, onSuccess, disabled }) => {
   const [accounts, setAccounts] = useState([]);
   const [bills, setBills] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     fetchMaxSTT()
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/products', setProducts, 'Không thể tải danh sách hàng hóa').finally(() => setFetchLoading(false));
@@ -29,7 +32,10 @@ const AddOrderDetail = ({ onCancel, onSuccess, disabled }) => {
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/customers', setCustomers, 'Không thể tải danh sách khách hàng').finally(() => setFetchLoading(false));
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng').finally(() => setFetchLoading(false));
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/bills', setBills, 'Không thể tải danh sách bill').finally(() => setFetchLoading(false));
-    form.setFieldsValue({ngay_dat_hang: moment()});
+    form.setFieldsValue({
+      ngay_dat_hang: moment(),
+      nguoi_phu_trach: currentUser?.ma_nguoi_dung || undefined,
+    });
   }, []);
 
   const fetchMaxSTT = async () => {

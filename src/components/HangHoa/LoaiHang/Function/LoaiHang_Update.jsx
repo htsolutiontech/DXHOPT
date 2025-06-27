@@ -15,6 +15,9 @@ const EditProductType = ({ product_typeId, onCancel, onSuccess }) => {
   const [product_typeData, setProductTypeData] = useState(null);
   const [accounts, setAccounts] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     if (product_typeId) fetchProductTypeData(product_typeId);
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng');
@@ -27,6 +30,10 @@ const EditProductType = ({ product_typeId, onCancel, onSuccess }) => {
       const product_type = allProductTypes.find(item => item.ma_loai_hang === id);
       if (!product_type) throw new Error(`Không tìm thấy loại hàng với mã: ${id}`);
       if (product_type.ngay_cap_nhat) product_type.ngay_cap_nhat = moment(product_type.ngay_cap_nhat);
+
+      // Gán luôn người cập nhật là user hiện tại
+      product_type.nguoi_cap_nhat = currentUser?.ma_nguoi_dung || undefined;
+
       setProductTypeData(product_type);
       form.setFieldsValue(product_type);
       message.success(`Đã tải thông tin loại hàng: ${product_type.ten_loai_hang}`);
@@ -101,7 +108,7 @@ const EditProductType = ({ product_typeId, onCancel, onSuccess }) => {
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item name="nguoi_cap_nhat" label="Người cập nhật" rules={[{ required: true }]}>
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn người cập nhật">
+                  <Select disabled>
                     {accounts.map(account => (
                       <Option key={account.ma_nguoi_dung} value={account.ma_nguoi_dung}>
                         {account.ho_va_ten}

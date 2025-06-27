@@ -77,8 +77,8 @@ const LoginHistoryTable = ({ data, loading }) => {
           </span>
         </Tooltip> : 
         record.abnormal ? 
-        <Tag color="red">Bất thường</Tag> : 
-        <Tag color="orange">Đang hoạt động</Tag>
+        <Tag color="red">Offline</Tag> : 
+        <Tag color="green">Online</Tag>
       ),
     },
     {

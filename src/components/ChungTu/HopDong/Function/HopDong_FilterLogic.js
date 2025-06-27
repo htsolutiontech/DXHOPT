@@ -6,8 +6,8 @@ export function filterHopDong(data, { searchTerm, yearFilter, contract_typeFilte
     return data.filter(item => {
       const matchesSearch =
         !searchTerm ||
-        normalizeString(item.so_hop_dong).includes(normalizedSearch) ||
-        normalizeString(item.doi_tac_lien_quan).includes(normalizedSearch);
+        normalizeString(item.so_hop_dong || '').includes(normalizedSearch) ||
+        normalizeString(item.doi_tac_lien_quan || '').includes(normalizedSearch);
   
       const matchesYear =
         yearFilter === 'all' ||

@@ -9,8 +9,8 @@ export function filterHangHoa(data, { searchTerm, pricelistSearch, statusFilter,
     return data.filter(item => {
       const matchesSearch =
         !searchTerm ||
-        normalizeString(item.ma_hang).includes(normalizedSearch) ||
-        normalizeString(item.ten_hang).includes(normalizedSearch) ||
+        normalizeString(item.ma_hang || '').includes(normalizedSearch) ||
+        normalizeString(item.ten_hang || '').includes(normalizedSearch) ||
         normalizeString(item.product_type?.ten_loai_hang || '').includes(normalizedSearch);
 
       const matchesPricelist =

@@ -19,6 +19,9 @@ const Editorder_detail = ({ order_detailId, onCancel, onSuccess }) => {
   const [customers, setCustomers] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [bills, setBills] = useState([]);
+
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
   
   useEffect(() => {
     if (order_detailId) fetchOrderDetailData(order_detailId);
@@ -36,6 +39,8 @@ const Editorder_detail = ({ order_detailId, onCancel, onSuccess }) => {
       const allOrder_Detail = await fetchDataList('https://dx.hoangphucthanh.vn:3000/warehouse/order-details');
       const order_detail = allOrder_Detail.find(item => item.ma_chi_tiet_don_hang === id);
       if (!order_detail) throw new Error(`Không tìm thấy chi tiết đơn hàng với mã: ${id}`);
+      // Gán luôn người cập nhật là user hiện tại
+      order_detail.nguoi_phu_trach = currentUser?.ma_nguoi_dung || undefined;
       setOrderDetailData(order_detail);
       form.setFieldsValue({
         ...order_detail,
@@ -91,300 +96,299 @@ const Editorder_detail = ({ order_detailId, onCancel, onSuccess }) => {
 
   return (
     <div className="edit-container">
-      <Card
-        title={`Chỉnh sửa Chi Tiết Đơn Hàng: ${order_detailData?.ma_hang || order_detailId}`}
-        bordered={false}
-        className="edit-card"
-      >
         {fetchLoading ? (
           <div className="loading-container">
             <Spin tip="Đang tải dữ liệu..." />
           </div>
         ) : (
-          <Form form={form} layout="vertical" onFinish={onFinish} className="edit-form">
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item name="ma_chi_tiet_don_hang" label="Mã CTDH" rules={[{ required: true }]}>
-                  <Input disabled />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item name="ma_hang" label="Mã hàng" rules={[{ required: true }]}>
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn mã hàng">
-                    {products
-                      .filter((product, index, self) => 
-                        index === self.findIndex(p => p.ma_hang === product.ma_hang) // Loại bỏ các mã hàng trùng lặp
-                      )
-                      .map(product => (
-                        <Option key={product.stt} value={product.ma_hang}>
-                          {product.ma_hang} ({product.ten_hang})
+          <>
+            <h2 className="edit-title" style={{ marginBottom: 24 }}>
+              Chỉnh sửa Chi Tiết Đơn Hàng của mã hàng: {order_detailData?.ma_hang || order_detailId}
+            </h2>
+            <Form form={form} layout="vertical" onFinish={onFinish} className="edit-form">
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item name="ma_chi_tiet_don_hang" label="Mã CTDH" rules={[{ required: true }]}>
+                    <Input disabled />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="ma_hang" label="Mã hàng" rules={[{ required: true }]}>
+                    <Select showSearch optionFilterProp="children" placeholder="Chọn mã hàng">
+                      {products
+                        .filter((product, index, self) => 
+                          index === self.findIndex(p => p.ma_hang === product.ma_hang) // Loại bỏ các mã hàng trùng lặp
+                        )
+                        .map(product => (
+                          <Option key={product.stt} value={product.ma_hang}>
+                            {product.ma_hang} ({product.ten_hang})
+                          </Option>
+                        ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item name="ngay_dat_hang" label="Ngày đặt hàng" rules={[{ required: true }]}>
+                    <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="so_luong" label="Số lượng" rules={[{ required: true }]}>
+                    <InputNumber style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item name="ma_hop_dong" label="Số hợp đồng" rules={[{ required: true }]}>
+                    <Select showSearch optionFilterProp="children" placeholder="Chọn hợp đồng">
+                      {contracts.map(contract => (
+                        <Option key={contract.so_hop_dong} value={contract.so_hop_dong}>
+                          {contract.so_hop_dong}
                         </Option>
                       ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item name="ngay_dat_hang" label="Ngày đặt hàng" rules={[{ required: true }]}>
-                  <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item name="so_luong" label="Số lượng" rules={[{ required: true }]}>
-                  <InputNumber style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item name="ma_hop_dong" label="Số hợp đồng" rules={[{ required: true }]}>
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn hợp đồng">
-                    {contracts.map(contract => (
-                      <Option key={contract.so_hop_dong} value={contract.so_hop_dong}>
-                        {contract.so_hop_dong}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item name="so_xac_nhan_don_hang" label="Số xác nhận đơn hàng" rules={[{ required: true }]}>
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn đơn hàng">
-                    {orders.map(order => (
-                      <Option key={order.so_don_hang} value={order.so_don_hang}>
-                        {order.so_don_hang}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item name="ten_khach_hang" label="Tên khách hàng" rules={[{ required: true }]}>
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn khách hàng">
-                    {customers.map(customer => (
-                      <Option key={customer.ma_khach_hang} value={customer.ma_khach_hang}>
-                        {customer.ten_khach_hang}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item name="nguoi_phu_trach" label="Người phụ trách" rules={[{ required: true }]}>
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn người phụ trách">
-                    {accounts.map(account => (
-                      <Option key={account.ma_nguoi_dung} value={account.ma_nguoi_dung}>
-                        {account.ho_va_ten}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={8}>
-                <Form.Item name="ngay_tam_ung" label="Ngày tạm ứng" >
-                  <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name="tu_ngay" label="Từ ngày" >
-                  <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name="den_ngay" label="Đến ngày" >
-                  <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={8}>
-                <Form.Item name="tinh_trang_don_hang" label="Tình trạng đơn hàng" rules={[{ required: true }]}>
-                  <Select>
-                    {['Đang xử lý', 'Hoàn thành', 'Đã hủy', 'Đã giao, đặt trả kho'].map(status => (
-                      <Option key={status} value={status}>{status}</Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name="hang_bao_ngay_du_kien_lan_1" label="Hãng báo ngày dự kiến 1" >
-                  <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name="hang_bao_ngay_du_kien_lan_2" label="Hãng báo ngày dự kiến 2" >
-                  <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={6}>
-                <Form.Item name="invoice_1" label="Invoice 1">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="packing_list_1" label="Packing List 1">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="so_luong_lo_1" label="Số lượng lô 1">
-                  <InputNumber style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="hawb_1" label="HAWB 1">
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn hawb">
-                    {bills.map(bill => (
-                      <Option key={bill.ma_bill} value={bill.ma_bill}>
-                        {bill.ma_bill}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={6}>
-                <Form.Item name="invoice_2" label="Invoice 2">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="packing_list_2" label="Packing List 2">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="so_luong_lo_2" label="Số lượng lô 2">
-                  <InputNumber style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="hawb_2" label="HAWB 2" >
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn hawb">
-                    {bills.map(bill => (
-                      <Option key={bill.ma_bill} value={bill.ma_bill}>
-                        {bill.ma_bill}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={6}>
-                <Form.Item name="invoice_3" label="Invoice 3">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="packing_list_3" label="Packing List 3">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="so_luong_lo_3" label="Số lượng lô 3">
-                  <InputNumber style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="hawb_3" label="HAWB 3" >
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn hawb">
-                    {bills.map(bill => (
-                      <Option key={bill.ma_bill} value={bill.ma_bill}>
-                        {bill.ma_bill}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={6}>
-                <Form.Item name="invoice_4" label="Invoice 4">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="packing_list_4" label="Packing List 4">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="so_luong_lo_4" label="Số lượng lô 4">
-                  <InputNumber style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="hawb_4" label="HAWB 4" >
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn hawb">
-                    {bills.map(bill => (
-                      <Option key={bill.ma_bill} value={bill.ma_bill}>
-                        {bill.ma_bill}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={6}>
-                <Form.Item name="invoice_5" label="Invoice 5">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="packing_list_5" label="Packing List 5">
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="so_luong_lo_5" label="Số lượng lô 5">
-                  <InputNumber style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="hawb_5" label="HAWB 5" >
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn hawb">
-                    {bills.map(bill => (
-                      <Option key={bill.ma_bill} value={bill.ma_bill}>
-                        {bill.ma_bill}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item name="so_luong_hang_chua_ve" label="Số lượng chưa về">
-                  <InputNumber style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item name="ghi_chu" label="Ghi chú">
-                  <Input />
-                </Form.Item>
-              </Col>
-            </Row>
-            <div className="form-actions">
-              <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={loading}>
-                Lưu
-              </Button>
-              <Button icon={<CloseOutlined />} onClick={onCancel} danger>
-                Hủy
-              </Button>
-            </div>
-          </Form>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="so_xac_nhan_don_hang" label="Số xác nhận đơn hàng" rules={[{ required: true }]}>
+                    <Select showSearch optionFilterProp="children" placeholder="Chọn đơn hàng">
+                      {orders.map(order => (
+                        <Option key={order.so_don_hang} value={order.so_don_hang}>
+                          {order.so_don_hang}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item name="ten_khach_hang" label="Tên khách hàng" rules={[{ required: true }]}>
+                    <Select showSearch optionFilterProp="children" placeholder="Chọn khách hàng">
+                      {customers.map(customer => (
+                        <Option key={customer.ma_khach_hang} value={customer.ma_khach_hang}>
+                          {customer.ten_khach_hang}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="nguoi_phu_trach" label="Người phụ trách" rules={[{ required: true }]}>
+                    <Select showSearch optionFilterProp="children" placeholder="Chọn người phụ trách">
+                      {accounts.map(account => (
+                        <Option key={account.ma_nguoi_dung} value={account.ma_nguoi_dung}>
+                          {account.ho_va_ten}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Form.Item name="ngay_tam_ung" label="Ngày tạm ứng" >
+                    <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item name="tu_ngay" label="Từ ngày" >
+                    <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item name="den_ngay" label="Đến ngày" >
+                    <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Form.Item name="tinh_trang_don_hang" label="Tình trạng đơn hàng" rules={[{ required: true }]}>
+                    <Select>
+                      {['Đang xử lý', 'Hoàn thành', 'Đã hủy', 'Đã giao, đặt trả kho'].map(status => (
+                        <Option key={status} value={status}>{status}</Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item name="hang_bao_ngay_du_kien_lan_1" label="Hãng báo ngày dự kiến 1" >
+                    <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item name="hang_bao_ngay_du_kien_lan_2" label="Hãng báo ngày dự kiến 2" >
+                    <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={6}>
+                  <Form.Item name="invoice_1" label="Invoice 1">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="packing_list_1" label="Packing List 1">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="so_luong_lo_1" label="Số lượng lô 1">
+                    <InputNumber style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="hawb_1" label="HAWB 1">
+                    <Select showSearch optionFilterProp="children" placeholder="Chọn hawb">
+                      {bills.map(bill => (
+                        <Option key={bill.ma_bill} value={bill.ma_bill}>
+                          {bill.ma_bill}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={6}>
+                  <Form.Item name="invoice_2" label="Invoice 2">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="packing_list_2" label="Packing List 2">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="so_luong_lo_2" label="Số lượng lô 2">
+                    <InputNumber style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="hawb_2" label="HAWB 2" >
+                    <Select showSearch optionFilterProp="children" placeholder="Chọn hawb">
+                      {bills.map(bill => (
+                        <Option key={bill.ma_bill} value={bill.ma_bill}>
+                          {bill.ma_bill}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={6}>
+                  <Form.Item name="invoice_3" label="Invoice 3">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="packing_list_3" label="Packing List 3">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="so_luong_lo_3" label="Số lượng lô 3">
+                    <InputNumber style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="hawb_3" label="HAWB 3" >
+                    <Select showSearch optionFilterProp="children" placeholder="Chọn hawb">
+                      {bills.map(bill => (
+                        <Option key={bill.ma_bill} value={bill.ma_bill}>
+                          {bill.ma_bill}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={6}>
+                  <Form.Item name="invoice_4" label="Invoice 4">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="packing_list_4" label="Packing List 4">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="so_luong_lo_4" label="Số lượng lô 4">
+                    <InputNumber style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="hawb_4" label="HAWB 4" >
+                    <Select showSearch optionFilterProp="children" placeholder="Chọn hawb">
+                      {bills.map(bill => (
+                        <Option key={bill.ma_bill} value={bill.ma_bill}>
+                          {bill.ma_bill}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={6}>
+                  <Form.Item name="invoice_5" label="Invoice 5">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="packing_list_5" label="Packing List 5">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="so_luong_lo_5" label="Số lượng lô 5">
+                    <InputNumber style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="hawb_5" label="HAWB 5" >
+                    <Select showSearch optionFilterProp="children" placeholder="Chọn hawb">
+                      {bills.map(bill => (
+                        <Option key={bill.ma_bill} value={bill.ma_bill}>
+                          {bill.ma_bill}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item name="so_luong_hang_chua_ve" label="Số lượng chưa về">
+                    <InputNumber style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="ghi_chu" label="Ghi chú">
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <div className="form-actions">
+                <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={loading}>
+                  Lưu
+                </Button>
+                <Button icon={<CloseOutlined />} onClick={onCancel} danger>
+                  Hủy
+                </Button>
+              </div>
+            </Form>
+          </>
         )}
-      </Card>
     </div>
   );
 };

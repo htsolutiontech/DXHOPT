@@ -6,9 +6,9 @@ export function filterNhapKho(data, { searchTerm, product_typeFilter, supplierFi
     return data.filter(item => {
       const matchesSearch =
         !searchTerm ||
-        normalizeString(item.ma_hang).includes(normalizedSearch) ||
-        normalizeString(item.ma_hop_dong).includes(normalizedSearch) ||
-        normalizeString(item.ma_bill).includes(normalizedSearch);
+        normalizeString(item.ma_hang || '').includes(normalizedSearch) ||
+        normalizeString(item.ma_hop_dong || '').includes(normalizedSearch) ||
+        normalizeString(item.ma_bill || '').includes(normalizedSearch);
   
       const matchesProductType =
         product_typeFilter === 'all' || item.product?.product_type?.ten_loai_hang === product_typeFilter;

@@ -17,6 +17,9 @@ const Editcontract = ({ contractId, onCancel, onSuccess }) => {
   const [accounts, setAccounts] = useState([]);
   const [contract_types, setContract_Types] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     if (contractId) fetchcontractData(contractId);
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng');
@@ -29,6 +32,10 @@ const Editcontract = ({ contractId, onCancel, onSuccess }) => {
       const allContracts = await fetchDataList('https://dx.hoangphucthanh.vn:3000/warehouse/contracts');
       const contract = allContracts.find(item => item.so_hop_dong === id);
       if (!contract) throw new Error(`Không tìm thấy hợp đồng với số: ${id}`);
+
+      // Gán luôn người cập nhật là user hiện tại
+      contract.nguoi_tao = currentUser?.ma_nguoi_dung || undefined;
+
       setContractData(contract);
       form.setFieldsValue({
         ...contract,
@@ -166,7 +173,7 @@ const Editcontract = ({ contractId, onCancel, onSuccess }) => {
               </Col>
               <Col span={12}>
                 <Form.Item name="nguoi_tao" label="Người tạo" rules={[{ required: true }]}>
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn người tạo">
+                  <Select disabled>
                     {accounts.map(account => (
                       <Option key={account.ma_nguoi_dung} value={account.ma_nguoi_dung}>
                         {account.ho_va_ten}

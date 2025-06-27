@@ -17,6 +17,9 @@ const EditOrder = ({ orderId, onCancel, onSuccess }) => {
   const [orderData, setOrderData] = useState(null);
   const [accounts, setAccounts] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     if (orderId) fetchOrderData(orderId);
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng');
@@ -29,6 +32,8 @@ const EditOrder = ({ orderId, onCancel, onSuccess }) => {
       const order = allOrders.find(item => item.so_don_hang === id);
       if (!order) throw new Error(`Không tìm thấy đơn hàng với mã: ${id}`);
       if (order.ngay_tao_don) order.ngay_tao_don = moment(order.ngay_tao_don);
+      // Gán luôn người cập nhật là user hiện tại
+      order.nguoi_lap_don = currentUser?.ma_nguoi_dung || undefined;
       setOrderData(order);
       form.setFieldsValue(order);
       message.success(`Đã tải thông tin đơn hàng: ${order.so_don_hang}`);

@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, Table, TableRow, TableCell, HeadingLevel, AlignmentType, WidthType } from 'docx';
-import { getUnitName } from '../../../utils/convert/unitCodes';
-import { getCountryName } from '../../../utils/convert/countryCodes';
+import { getUnitName } from '../../../../utils/convert/unitCodes';
+import { getCountryName } from '../../../../utils/convert/countryCodes';
 
 export const exportQuotationWord = async (thongTin, hangHoa, DEFAULT_DIEU_KIEN) => {
   const tableRows = [

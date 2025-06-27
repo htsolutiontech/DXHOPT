@@ -54,7 +54,7 @@ const BangChiTietDonHang = () => {
     const [deletingOrderDetail, setDeletingOrderDetail] = useState(null);
 
     // Gọi API lấy danh sách khách hàng bằng hàm tái sử dụng
-    const fetchOrder_Detail = () => {
+    const fetchOrder_Details = () => {
         fetchData({
             endpoint: '/order-details', // endpoint API
             setData,                // set state dữ liệu
@@ -64,7 +64,7 @@ const BangChiTietDonHang = () => {
 
     // Tự động gọi API khi component mount
     useEffect(() => {
-        fetchOrder_Detail();
+        fetchOrder_Details();
     }, []);
 
     const handleEdit = (record) => {
@@ -73,12 +73,12 @@ const BangChiTietDonHang = () => {
 
     const handleEditClose = () => {
         setEditingOrder_Detail(null);
-        fetchOrder_Detail();
+        fetchOrder_Details();
     };
 
     const handleAddSuccess = () => {
         setAddOrderDetail(false);
-        fetchOrder_Detail();
+        fetchOrder_Details();
     };
 
     const handleRemove = (record) => {
@@ -89,7 +89,7 @@ const BangChiTietDonHang = () => {
         setSearchTerm('');
         resetFilters([setProduct_TypeFilter, setAccountFilter, setYearFilter]);
         setCurrentPage(1);
-        fetchOrder_Detail();
+        fetchOrder_Details();
         setSortField('ngay_dat_hang');
         setSortOrder('descend');
     };
@@ -125,7 +125,7 @@ const BangChiTietDonHang = () => {
                 onClose={() => setShowImportModal(false)}
                 onSuccess={() => {
                     setShowImportModal(false);
-                    fetchOrder_Detail(); // Gọi lại API để cập nhật danh sách sau khi import
+                    fetchOrder_Details(); // Gọi lại API để cập nhật danh sách sau khi import
                 }}
             />
 
@@ -212,7 +212,7 @@ const BangChiTietDonHang = () => {
                     customerName={deletingOrderDetail.customers?.ten_khach_hang}
                     onSuccess={() => {
                         setDeletingOrderDetail(null);
-                        fetchOrder_Detail();
+                        fetchOrder_Details();
                     }}
                     onCancel={() => setDeletingOrderDetail(null)}
                 />

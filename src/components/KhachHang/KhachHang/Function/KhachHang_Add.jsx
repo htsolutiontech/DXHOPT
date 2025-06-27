@@ -16,9 +16,15 @@ const Addcustomer = ({ onCancel, onSuccess, disabled }) => {
   const [fetchLoading, setFetchLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng').finally(() => setFetchLoading(false));
-    form.setFieldsValue({ngay_them_vao: moment()});
+    form.setFieldsValue({
+      ngay_them_vao: moment(),
+      nguoi_phu_trach: currentUser?.ma_nguoi_dung || undefined,
+    });
   }, []);
   
     const onFinish = async (values) => {

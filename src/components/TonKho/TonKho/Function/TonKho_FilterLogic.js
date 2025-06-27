@@ -6,7 +6,7 @@ export function filterTonKho(data, { searchTerm, yearFilter, product_typeFilter,
   return data.filter(item => {
     const matchesSearch =
       !searchTerm ||
-      normalizeString(item.ma_hang).includes(normalizedSearch);
+      normalizeString(item.ma_hang  || '').includes(normalizedSearch);
 
     const matchesYear =
       yearFilter === 'all' || item.nam === yearFilter;

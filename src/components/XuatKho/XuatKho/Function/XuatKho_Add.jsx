@@ -19,8 +19,13 @@ const AddStockOut = ({ onCancel, onSuccess, disabled }) => {
   const [customers, setCustomers] = useState([]);
   const [currentStock, setCurrentStock] = useState(0); // Số lượng hàng hiện có
 
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     fetchInitialData();
+    form.setFieldsValue({
+      nguoi_phu_trach: currentUser?.ma_nguoi_dung || undefined,
+    });
   }, []);
 
   const fetchInitialData = async () => {

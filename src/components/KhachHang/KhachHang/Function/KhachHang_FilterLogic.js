@@ -6,9 +6,9 @@ export function filterKhachHang(data, { searchTerm, yearFilter, accountFilter, p
     return data.filter(item => {
       const matchesSearch =
         !searchTerm ||
-        normalizeString(item.ma_khach_hang).includes(normalizedSearch) ||
-        normalizeString(item.ten_khach_hang).includes(normalizedSearch) ||
-        normalizeString(item.tinh_thanh).includes(normalizedSearch);
+        normalizeString(item.ma_khach_hang || '').includes(normalizedSearch) ||
+        normalizeString(item.ten_khach_hang || '').includes(normalizedSearch) ||
+        normalizeString(item.tinh_thanh || '').includes(normalizedSearch);
   
       const matchesAccount =
         accountFilter === 'all' || item.accounts?.ho_va_ten === accountFilter;

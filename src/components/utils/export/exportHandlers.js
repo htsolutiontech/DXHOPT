@@ -64,6 +64,9 @@ export const handleExport = async ({
           case 'nguoi_lap_don':
             return safeExport(item.accounts?.ho_va_ten ?? item[field]);
 
+          case 'vai_tro':
+            return safeExport(item.role?.vai_tro ?? item[field]);
+
           case 'ten_loai_hang':
             return safeExport(item.product_type?.ten_loai_hang ?? item[field]);
 
@@ -72,6 +75,9 @@ export const handleExport = async ({
 
           case 'loai_hop_dong':
             return safeExport(item.contract_type?.ten_loai_hop_dong ?? item[field]);
+
+          case 'loai_bao_gia':
+            return safeExport(item.quotation_type?.loai_bao_gia ?? item[field]);
 
           case 'ten_kho':
             return safeExport(item.warehouse?.ten_kho ?? item[field]);
@@ -97,6 +103,8 @@ export const handleExport = async ({
           case 'hang_bao_ngay_du_kien_lan_1':
           case 'hang_bao_ngay_du_kien_lan_2':
           case 'ngay_tao_don':
+          case 'ngay_bao_gia':
+          case 'ngay_tao':
             return safeExport(item[field], formatDate);
 
           case 'trong_luong_tinh':
@@ -105,6 +113,7 @@ export const handleExport = async ({
           case 'tong_no_phai_thu':
           case 'gia_tri_hop_dong':
           case 'tong_gia_tri_don_hang':
+          case 'tong_tri_gia':
             return safeExport(item[field], formatCurrency);
 
           default:

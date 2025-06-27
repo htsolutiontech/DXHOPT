@@ -18,6 +18,9 @@ const Editstock_out = ({ stock_outId, onCancel, onSuccess }) => {
   const [warehouses, setWarehouses] = useState([]);
   const [customers, setCustomers] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     if (stock_outId) fetchStockOutData(stock_outId);
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/products', setProducts, 'Không thể tải danh sách hàng hóa');
@@ -32,6 +35,10 @@ const Editstock_out = ({ stock_outId, onCancel, onSuccess }) => {
       const allStock_Out = await fetchDataList('https://dx.hoangphucthanh.vn:3000/warehouse/stock-out');
       const stock_out = allStock_Out.find(item => item.ma_stock_out === id);
       if (!stock_out) throw new Error(`Không tìm thấy xuất hàng với mã: ${id}`);
+
+      // Gán luôn người cập nhật là user hiện tại
+      stock_out.nguoi_phu_trach = currentUser?.ma_nguoi_dung || undefined;
+
       setStockOutData(stock_out);
       form.setFieldsValue({
         ...stock_out,

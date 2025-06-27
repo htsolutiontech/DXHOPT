@@ -130,7 +130,7 @@ const BangKhachHang = () => {
             />
 
             <KhachHang_Export
-                data={sortedData}
+                data={data}
                 filteredData={filteredData}
                 sortedData={sortedData}
                 visible={showExportModal}

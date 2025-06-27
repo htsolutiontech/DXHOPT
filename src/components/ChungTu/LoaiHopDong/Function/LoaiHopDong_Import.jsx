@@ -57,12 +57,12 @@ const LoaiHopDong_Import = ({ open, onClose, onSuccess, disabled }) => {
   // Hàm xử lý sau khi parse file Excel
   const handleAfterParse = (parsedRows) => {
     // Gán mã hợp đồng tự động cho từng dòng
-    const dataWithMaLH = parsedRows.map((row, idx) => ({
+    const dataWithMaLHD = parsedRows.map((row, idx) => ({
       ...row,
       ma_loai_hop_dong: generateMaLoaiHopDong(idx)
     }));
-    setParsedData(dataWithMaLH);
-    handleValidateData(dataWithMaLH);
+    setParsedData(dataWithMaLHD);
+    handleValidateData(dataWithMaLHD);
     setShowPreview(true);
   };
 

@@ -15,6 +15,9 @@ const EditContractType = ({ contract_typeId, onCancel, onSuccess }) => {
   const [contract_typeData, setContractTypeData] = useState(null);
   const [accounts, setAccounts] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     if (contract_typeId) fetchContractTypeData(contract_typeId);
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng');
@@ -27,6 +30,8 @@ const EditContractType = ({ contract_typeId, onCancel, onSuccess }) => {
       const contract_type = allContractTypes.find(item => item.ma_loai_hop_dong === id);
       if (!contract_type) throw new Error(`Không tìm thấy loại hợp đồng với mã: ${id}`);
       if (contract_type.ngay_cap_nhat) contract_type.ngay_cap_nhat = moment(contract_type.ngay_cap_nhat);
+      // Gán luôn người cập nhật là user hiện tại
+      contract_type.nguoi_cap_nhat = currentUser?.ma_nguoi_dung || undefined;
       setContractTypeData(contract_type);
       form.setFieldsValue(contract_type);
       message.success(`Đã tải thông tin loại hợp đồng: ${contract_type.ten_loai_hop_dong}`);
@@ -105,7 +110,7 @@ const EditContractType = ({ contract_typeId, onCancel, onSuccess }) => {
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item name="nguoi_cap_nhat" label="Người cập nhật" rules={[{ required: true }]}>
-                    <Select showSearch optionFilterProp="children" placeholder="Chọn người cập nhật">
+                    <Select disabled>
                       {accounts.map(account => (
                         <Option key={account.ma_nguoi_dung} value={account.ma_nguoi_dung}>
                           {account.ho_va_ten}

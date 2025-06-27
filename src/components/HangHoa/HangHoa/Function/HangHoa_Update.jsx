@@ -18,6 +18,9 @@ const Editproduct = ({ productId, stt, onCancel, onSuccess }) => {
   const [product_types, setProduct_Types] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
 
+  // Lấy user hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+
   useEffect(() => {
     if (productId && stt) fetchProductData(productId, stt);
     fetchAndSetList('https://dx.hoangphucthanh.vn:3000/warehouse/accounts', setAccounts, 'Không thể tải danh sách người dùng');
@@ -34,6 +37,10 @@ const Editproduct = ({ productId, stt, onCancel, onSuccess }) => {
         item.ma_hang === id && item.stt === stt
       );
       if (!product) throw new Error(`Không tìm thấy hàng hóa với mã: ${id} và số thứ tự: ${stt}`);
+
+      // Gán luôn người cập nhật là user hiện tại
+      product.nguoi_cap_nhat = currentUser?.ma_nguoi_dung || undefined;
+
       setProductData(product);
       form.setFieldsValue({
         ...product,
@@ -185,7 +192,7 @@ const Editproduct = ({ productId, stt, onCancel, onSuccess }) => {
               </Col>
               <Col span={12}>
                 <Form.Item name="nguoi_cap_nhat" label="Người cập nhật" rules={[{ required: true }]}>
-                  <Select showSearch optionFilterProp="children" placeholder="Chọn người cập nhật">
+                  <Select disabled>
                     {accounts.map(account => (
                       <Option key={account.ma_nguoi_dung} value={account.ma_nguoi_dung}>
                         {account.ho_va_ten}

@@ -28,6 +28,7 @@ import NhapKhoTableView from './View/NhapKho_TableView';
 import EditStock_In from './Function/NhapKho_Update';
 import AddStockIn from './Function/NhapKho_Add';
 import RemoveStockIn from './Function/NhapKho_Delete';
+import { resetNhapKhoDatabase } from './Function/NhapKho_ResetData';
 
 const BangNhapKho = () => {
     // State lưu dữ liệu bảng và trạng thái chung
@@ -111,10 +112,18 @@ const BangNhapKho = () => {
         setPageSize(pageSize);
     };
 
+    const handleResetData = async () => {
+        const result = await resetNhapKhoDatabase();
+        if (result) {
+            fetchStock_In(); // Làm mới lại dữ liệu bảng nếu cần
+        }
+    };
+
     return (
         <div className="bang-nhap-kho-container">
             <AreaHeader
                 title="Nhập Hàng"
+                onResetdataClick={handleResetData}
                 onImportClick={() => setShowImportModal(true)}
                 onExportClick={() => setShowExportModal(true)}
                 onAddClick={() => setAddStockIn(true)}

@@ -7,39 +7,34 @@ import '../../../utils/css/Custom-Export.css';
 
 const { TabPane } = Tabs;
 
-function HopDong_Export({ data, filteredData, sortedData, onClose, visible }) {
+function NguoiDung_Export({ data, filteredData, sortedData, onClose, visible }) {
   const [exporting, setExporting] = useState(false);
   const [activeTab, setActiveTab] = useState('1');
 
   const fieldMappings = {
     stt: 'STT',
-    so_hop_dong: 'Số hợp đồng',
-    loai_hop_dong: 'Loại hợp đồng',
-    trang_thai_hop_dong: 'Trạng thái',
-    ngay_ky_hop_dong: 'Ngày ký hợp đồng',
-    ngay_bat_dau: 'Ngày bắt đầu',
-    ngay_ket_thuc: 'Ngày kết thúc',
-    gia_tri_hop_dong: 'Giá trị hợp đồng',
-    doi_tac_lien_quan: 'Đối tác liên quan',
-    dieu_khoan_thanh_toan: 'Điều khoản thanh toán',
-    tep_dinh_kem: 'Tệp đính kèm',
-    vi_tri_luu_tru: 'Vị trí lưu',
-    nguoi_tao: 'Người tạo',
-    ghi_chu: 'Ghi chú'
+    ma_nguoi_dung: 'Mã người dùng',
+    ten_dang_nhap: 'Tên đăng nhập',
+    mat_khau: 'Mật khẩu',
+    ho_va_ten: 'Họ và tên',
+    email: 'Mã số thuế',
+    so_dien_thoai: 'Số điện thoại',
+    vai_tro: 'Vai trò',
+    ngay_tao: 'Ngày tạo',
   };
 
   const [exportOptions, setExportOptions] = useState({
     dataSource: 'sorted',
     fileFormat: 'xlsx',
     exportFields: Object.keys(fieldMappings),
-    fileName: `hop_dong_${new Date().toISOString().split('T')[0]}`,
+    fileName: `tai_khoan_nguoi_dung_${new Date().toISOString().split('T')[0]}`,
     includeHeaderRow: true
   });
 
   return (
     <Modal
       className="export-modal"
-      title={<div className="export-modal-title"><FileExcelOutlined /> Xuất dữ liệu hợp đồng</div>}
+      title={<div className="export-modal-title"><FileExcelOutlined /> Xuất dữ liệu tài khoản người dùng</div>}
       open={visible}
       onCancel={onClose}
       width={700}
@@ -83,4 +78,4 @@ function HopDong_Export({ data, filteredData, sortedData, onClose, visible }) {
   );
 }
 
-export default HopDong_Export;
+export default NguoiDung_Export;
