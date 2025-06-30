@@ -7,34 +7,34 @@ import DashboardLanding from "../components/Dashboard/DashboardLanding";
 
 const Home = lazy(() => import("../components/Home/Home"));
 // Import Warehouse
-const HangHoa = lazy(() => import("../components/HangHoa/HangHoa/HangHoa_Main"));
-const LoaiHang = lazy(() => import("../components/HangHoa/LoaiHang/LoaiHang_Main"));
-const NhaCungCap = lazy(() => import("../components/NhaCungCap/NCC_Main"));
-const NhapKho = lazy(() => import("../components/NhapKho/NhapKho/NhapKho_Main"));
-const NhapKhoThang = lazy(() => import("../components/NhapKho/ThongKeThang/ThongKeThangNK_Main"));
-const XuatKho = lazy(() => import("../components/XuatKho/XuatKho/XuatKho_Main"));
-const XuatKhoThang = lazy(() => import("../components/XuatKho/ThongKeThang/ThongKeThangXK_Main"));
-const XuatKhoKhachHang = lazy(() => import("../components/XuatKho/ThongKeKhachHang/ThongKeKhachHangXK_Main"));
-const TonKho = lazy(() => import("../components/TonKho/TonKho/TonKho_Main"));
-const TonKhoThang = lazy(() => import("../components/TonKho/ThongKeThang/ThongKeThangTK_Main"));
-const DonHang = lazy(() => import("../components/DatHang/DonHang/DonHang_Main"));
-const ChiTietDonHang = lazy(() => import("../components/DatHang/ChiTietDonHang/CTDH_Main"));
-const CTDHThang = lazy(() => import("../components/DatHang/ThongKeThang/ThongKeThangCTDH_Main"));
-const CTDHKhachHang = lazy(() => import("../components/DatHang/ThongKeKhachHang/ThongKeKhachHangCTDH_Main"));
+const HangHoa = lazy(() => import("../components/KhoHang/HangHoa/HangHoa/HangHoa_Main"));
+const LoaiHang = lazy(() => import("../components/KhoHang/HangHoa/LoaiHang/LoaiHang_Main"));
+const NhaCungCap = lazy(() => import("../components/KhoHang/NhaCungCap/NhaCungCap/NCC_Main"));
+const NhapKho = lazy(() => import("../components/KhoHang/NhapKho/NhapKho/NhapKho_Main"));
+const NhapKhoThang = lazy(() => import("../components/KhoHang/NhapKho/ThongKeThang/ThongKeThangNK_Main"));
+const XuatKho = lazy(() => import("../components/KhoHang/XuatKho/XuatKho/XuatKho_Main"));
+const XuatKhoThang = lazy(() => import("../components/KhoHang/XuatKho/ThongKeThang/ThongKeThangXK_Main"));
+const XuatKhoKhachHang = lazy(() => import("../components/KhoHang/XuatKho/ThongKeKhachHang/ThongKeKhachHangXK_Main"));
+const TonKho = lazy(() => import("../components/KhoHang/TonKho/TonKho/TonKho_Main"));
+const TonKhoThang = lazy(() => import("../components/KhoHang/TonKho/ThongKeThang/ThongKeThangTK_Main"));
+const DonHang = lazy(() => import("../components/KhoHang/DatHang/DonHang/DonHang_Main"));
+const ChiTietDonHang = lazy(() => import("../components/KhoHang/DatHang/ChiTietDonHang/CTDH_Main"));
+const CTDHThang = lazy(() => import("../components/KhoHang/DatHang/ThongKeThang/ThongKeThangCTDH_Main"));
+const CTDHKhachHang = lazy(() => import("../components/KhoHang/DatHang/ThongKeKhachHang/ThongKeKhachHangCTDH_Main"));
 
 // Import CRM
-const KhachHang = lazy(() => import("../components/KhachHang/KhachHang/KhachHang_Main"));
-const HopDong = lazy(() => import("../components/ChungTu/HopDong/HopDong_Main"));
-const LoaiHopDong = lazy(() => import("../components/ChungTu/LoaiHopDong/LoaiHopDong_Main"));
-const Bill = lazy(() => import("../components/ChungTu/Bill/Bill_Main"));
-const NguonCoHoi = lazy(() => import("../components/KhachHangTN/NguonCH/NguonCH_Main"));
-const NhomKhachHang = lazy(() => import("../components/KhachHangTN/GroupKH/nhomKH_Main"));
-const KhachHangTiemNang = lazy(() => import("../components/KhachHangTN/KHTN/KHTN_Main"));
-const LoaiBaoGia = lazy(() => import("../components/BaoGia/LoaiBaoGia/LoaiBaoGia_Main"));
-const TrangThaiBaoGia = lazy(() => import("../components/BaoGia/TTBaoGia/TTBaoGia_Main"));
-const BaoGia = lazy(() => import("../components/BaoGia/BaoGia/BaoGia_Main"));
-const ChiTietBaoGia = lazy(() => import("../components/BaoGia/ChiTietBaoGia/CTBG_Main"));
-const BaoGiaSo = lazy(() => import("../components/BaoGia/BaoGiaTuDong/BaoGiaSo/BaoGiaSo"));
+const KhachHang = lazy(() => import("../components/CRM/KhachHang/KhachHang/KhachHang_Main"));
+const HopDong = lazy(() => import("../components/CRM/ChungTu/HopDong/HopDong_Main"));
+const LoaiHopDong = lazy(() => import("../components/CRM/ChungTu/LoaiHopDong/LoaiHopDong_Main"));
+const Bill = lazy(() => import("../components/CRM/ChungTu/Bill/Bill_Main"));
+const NguonCoHoi = lazy(() => import("../components/CRM/KhachHangTN/NguonCH/NguonCH_Main"));
+const NhomKhachHang = lazy(() => import("../components/CRM/KhachHangTN/GroupKH/nhomKH_Main"));
+const KhachHangTiemNang = lazy(() => import("../components/CRM/KhachHangTN/KHTN/KHTN_Main"));
+const LoaiBaoGia = lazy(() => import("../components/CRM/BaoGia/LoaiBaoGia/LoaiBaoGia_Main"));
+const TrangThaiBaoGia = lazy(() => import("../components/CRM/BaoGia/TTBaoGia/TTBaoGia_Main"));
+const BaoGia = lazy(() => import("../components/CRM/BaoGia/BaoGia/BaoGia_Main"));
+const ChiTietBaoGia = lazy(() => import("../components/CRM/BaoGia/ChiTietBaoGia/CTBG_Main"));
+const BaoGiaSo = lazy(() => import("../components/CRM/BaoGia/BaoGiaTuDong/BaoGiaSo/BaoGiaSo"));
 
 // Import Administration
 const VaiTro = lazy(() => import("../components/QuanTri/VaiTro/VaiTro_Main"));
