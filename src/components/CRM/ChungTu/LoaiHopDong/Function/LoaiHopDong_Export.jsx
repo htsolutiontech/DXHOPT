@@ -32,7 +32,7 @@ function LoaiHopDong_Export({ data, filteredData, sortedData, onClose, visible }
   return (
     <Modal
       className="export-modal"
-      title={<div className="export-modal-title"><FileExcelOutlined /> Xuất dữ liệu hợp đồng</div>}
+      title={<div className="export-modal-title"><FileExcelOutlined /> Xuất dữ liệu loại hợp đồng</div>}
       open={visible}
       onCancel={onClose}
       width={700}

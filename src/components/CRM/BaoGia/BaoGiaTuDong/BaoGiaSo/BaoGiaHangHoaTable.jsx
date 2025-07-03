@@ -2,67 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Select, InputNumber, message, Input } from 'antd';
 import { getCountryName } from '../../../../utils/convert/countryCodes';
 import { getUnitName } from '../../../../utils/convert/unitCodes';
-import { getProductDescription } from '../../../../utils/convert/productDescriptionsExcel';
-import { getStockByMaHang } from '../../../../utils/inventory/getStockByMaHang';
+import { calcDonGia, MoTaCell, SoLuongCell, ImageCell } from './HangHoa/hangHoaHelpers';
 import { fetchAndSetList } from '../../../../utils/api/fetchHelpers';
 import { UploadOutlined } from '@ant-design/icons';
 import BaoGiaSo_Import from './Function/BaoGiaSo_Import';
 import '../../../../utils/css/Custom-Button.css';
 
 const { Option } = Select;
-
-// Cell hiển thị mô tả sản phẩm
-const MoTaCell = ({ maHang }) => {
-  const [moTa, setMoTa] = useState('');
-  useEffect(() => {
-    getProductDescription(maHang).then(setMoTa);
-  }, [maHang]);
-  return <span>{moTa}</span>;
-};
-
-// Cell nhập số lượng và hiển thị tồn kho
-const SoLuongCell = ({ value, maHang, onChange }) => {
-  const [stock, setStock] = useState(null);
-  useEffect(() => {
-    getStockByMaHang(maHang).then(setStock);
-  }, [maHang]);
-  return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <InputNumber
-        min={1}
-        value={value}
-        onChange={onChange}
-        style={{ width: 32, height: 20, fontSize: 9 }}
-      />
-      {typeof stock === 'number' && (
-        <span
-          style={{
-            color: 'red',
-            fontWeight: 'bold',
-            marginLeft: 4,
-            fontSize: 9,
-            whiteSpace: 'nowrap'
-          }}
-        >
-          ({stock})
-        </span>
-      )}
-    </div>
-  );
-};
-
-// Hàm tính toán giá theo công thức mới
-function calcDonGia(gia_thuc, heSo, ty_le_thue_nk, ty_le_thue_gtgt, chiet_khau) {
-  const gia_co_thue_nk = gia_thuc * (1 + ty_le_thue_nk);
-  // Làm tròn đến nghìn sau mỗi bước như Excel
-  const base = roundToThousands((gia_co_thue_nk * heSo) / (1 + ty_le_thue_gtgt));
-  const don_gia = roundToThousands(base * (1 + chiet_khau));
-  return don_gia;
-}
-
-function roundToThousands(num) {
-  return Math.round(num / 1000) * 1000;
-}
 
 const BaoGiaHangHoaTable = ({
   thongTin,
@@ -96,7 +42,10 @@ const BaoGiaHangHoaTable = ({
 
   // Thêm sản phẩm vào bảng
   const handleAddProduct = (ma_hang) => {
-    const prod = products.find(p => p.ma_hang === ma_hang);
+    // Lấy đúng sản phẩm theo mã hàng và price list đã chọn
+    const prod = products.find(
+      p => p.ma_hang === ma_hang && p.price_list === thongTin.price_list
+    );
     if (!prod) return;
     if (hangHoa.some(h => h.ma_hang === ma_hang)) {
       message.warning('Mã hàng đã có trong bảng!');
@@ -311,20 +260,7 @@ const BaoGiaHangHoaTable = ({
             justifyContent: 'center'
           }}
         >
-          <img
-            src={`/image/HangHoa/${ma_hang}.jpg`}
-            alt=""
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              background: '#fff',
-              border: '1px solid #eee',
-              borderRadius: 4,
-              display: 'block'
-            }}
-            onError={e => { e.target.style.display = 'none'; }}
-          />
+          <ImageCell ma_hang={ma_hang} />
         </div>
       )
     },

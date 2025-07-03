@@ -10,7 +10,7 @@ import NumericInput from '../../../../utils/jsx/NumericInput';
 
 const { Option } = Select;
 
-const Addcustomer = ({ onCancel, onSuccess, disabled }) => {
+const AddCustomer = ({ onCancel, onSuccess, disabled }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
@@ -166,4 +166,4 @@ const Addcustomer = ({ onCancel, onSuccess, disabled }) => {
   );
 };
 
-export default Addcustomer;
+export default AddCustomer;

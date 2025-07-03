@@ -65,14 +65,10 @@ const BangBaoGia = () => {
         fetchQuotations();
     }, []);
 
-    // const handleEdit = (record) => {
-    //     setEditingContract(record.so_hop_dong);
-    // };
-
-    // const handleEditClose = () => {
-    //     setEditingContract(null);
-    //     fetchContracts();
-    // };
+    const handleEdit = (record) => {
+        // Chuyển hướng tới trang báo giá số tự động, truyền số báo giá
+        navigate(`/system/crm/auto_number_quote/${record.so_bao_gia}`);
+    };
 
     const handleRemove = (record) => {
         setDeletingQuotation(record);
@@ -140,7 +136,7 @@ const BangBaoGia = () => {
                 currentPage={currentPage}
                 pageSize={pageSize}
                 loading={loading}
-                // handleEdit={handleEdit}
+                handleEdit={handleEdit}
                 handleRemove={handleRemove}
                 canEdit={canEdit}
                 onSortChange={(field, order) => {

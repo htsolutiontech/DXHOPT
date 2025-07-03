@@ -10,7 +10,7 @@ import NumericInput from '../../../../utils/jsx/NumericInput';
 
 const { Option } = Select;
 
-const Editcustomer = ({ customerId, onCancel, onSuccess }) => {
+const EditCustomer = ({ customerId, onCancel, onSuccess }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
@@ -185,4 +185,4 @@ const Editcustomer = ({ customerId, onCancel, onSuccess }) => {
   );
 };
 
-export default Editcustomer;
+export default EditCustomer;

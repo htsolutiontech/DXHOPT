@@ -85,6 +85,15 @@ export const handleExport = async ({
           case 'ten_khach_hang':
             return safeExport(item.customers?.ten_khach_hang ?? item[field]);
 
+          case 'nhom_khach_hang':
+            return safeExport(item.customer_group?.nhom_khach_hang ?? item[field]);
+
+          case 'nguon_tiep_can':
+            return safeExport(item.opportunity_source?.nguon ?? item[field]);
+
+          case 'loai_tuong_tac':
+            return safeExport(item.interaction_type?.loai_tuong_tac ?? item[field]);
+
           case 'nuoc_xuat_xu':
             return safeExport(item[field], getCountryName);
 
@@ -105,6 +114,7 @@ export const handleExport = async ({
           case 'ngay_tao_don':
           case 'ngay_bao_gia':
           case 'ngay_tao':
+          case 'ngay_lien_lac_tiep_theo':
             return safeExport(item[field], formatDate);
 
           case 'trong_luong_tinh':

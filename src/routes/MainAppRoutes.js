@@ -7,6 +7,7 @@ import DashboardLanding from "../components/Dashboard/DashboardLanding";
 
 const Home = lazy(() => import("../components/Home/Home"));
 // Import Warehouse
+const KhoHang = lazy(() => import("../components/KhoHang/KhoHang/View/KhoHang_Main"));
 const HangHoa = lazy(() => import("../components/KhoHang/HangHoa/HangHoa/HangHoa_Main"));
 const LoaiHang = lazy(() => import("../components/KhoHang/HangHoa/LoaiHang/LoaiHang_Main"));
 const NhaCungCap = lazy(() => import("../components/KhoHang/NhaCungCap/NhaCungCap/NCC_Main"));
@@ -17,24 +18,27 @@ const XuatKhoThang = lazy(() => import("../components/KhoHang/XuatKho/ThongKeTha
 const XuatKhoKhachHang = lazy(() => import("../components/KhoHang/XuatKho/ThongKeKhachHang/ThongKeKhachHangXK_Main"));
 const TonKho = lazy(() => import("../components/KhoHang/TonKho/TonKho/TonKho_Main"));
 const TonKhoThang = lazy(() => import("../components/KhoHang/TonKho/ThongKeThang/ThongKeThangTK_Main"));
-const DonHang = lazy(() => import("../components/KhoHang/DatHang/DonHang/DonHang_Main"));
-const ChiTietDonHang = lazy(() => import("../components/KhoHang/DatHang/ChiTietDonHang/CTDH_Main"));
-const CTDHThang = lazy(() => import("../components/KhoHang/DatHang/ThongKeThang/ThongKeThangCTDH_Main"));
-const CTDHKhachHang = lazy(() => import("../components/KhoHang/DatHang/ThongKeKhachHang/ThongKeKhachHangCTDH_Main"));
+const BaoCaoKhoHang = lazy(() => import("../components/KhoHang/BaoCaoKhoHang/View/BaoCaoKhoHang_Main"));
 
 // Import CRM
 const KhachHang = lazy(() => import("../components/CRM/KhachHang/KhachHang/KhachHang_Main"));
 const HopDong = lazy(() => import("../components/CRM/ChungTu/HopDong/HopDong_Main"));
 const LoaiHopDong = lazy(() => import("../components/CRM/ChungTu/LoaiHopDong/LoaiHopDong_Main"));
 const Bill = lazy(() => import("../components/CRM/ChungTu/Bill/Bill_Main"));
-const NguonCoHoi = lazy(() => import("../components/CRM/KhachHangTN/NguonCH/NguonCH_Main"));
-const NhomKhachHang = lazy(() => import("../components/CRM/KhachHangTN/GroupKH/nhomKH_Main"));
-const KhachHangTiemNang = lazy(() => import("../components/CRM/KhachHangTN/KHTN/KHTN_Main"));
+const NguonCoHoi = lazy(() => import("../components/CRM/KhachHangTN/NguonCoHoi/NguonCoHoi_Main"));
+const NhomKhachHang = lazy(() => import("../components/CRM/KhachHangTN/NhomKhachHang/NhomKhachHang_Main"));
+const KhachHangTiemNang = lazy(() => import("../components/CRM/KhachHangTN/KhachHangTN/KhachHangTN_Main"));
+const LoaiTuongTac = lazy(() => import("../components/CRM/ChamSocKH/LoaiTuongTac/LoaiTuongTac_Main"));
+const ChamSocKhachHang = lazy(() => import("../components/CRM/ChamSocKH/ChamSocKH/ChamSocKH_Main"));
 const LoaiBaoGia = lazy(() => import("../components/CRM/BaoGia/LoaiBaoGia/LoaiBaoGia_Main"));
 const TrangThaiBaoGia = lazy(() => import("../components/CRM/BaoGia/TTBaoGia/TTBaoGia_Main"));
 const BaoGia = lazy(() => import("../components/CRM/BaoGia/BaoGia/BaoGia_Main"));
 const ChiTietBaoGia = lazy(() => import("../components/CRM/BaoGia/ChiTietBaoGia/CTBG_Main"));
 const BaoGiaSo = lazy(() => import("../components/CRM/BaoGia/BaoGiaTuDong/BaoGiaSo/BaoGiaSo"));
+const DonHang = lazy(() => import("../components/CRM/DatHang/DonHang/DonHang_Main"));
+const ChiTietDonHang = lazy(() => import("../components/CRM/DatHang/ChiTietDonHang/CTDH_Main"));
+const CTDHThang = lazy(() => import("../components/CRM/DatHang/ThongKeThang/ThongKeThangCTDH_Main"));
+const CTDHKhachHang = lazy(() => import("../components/CRM/DatHang/ThongKeKhachHang/ThongKeKhachHangCTDH_Main"));
 
 // Import Administration
 const VaiTro = lazy(() => import("../components/QuanTri/VaiTro/VaiTro_Main"));
@@ -86,6 +90,9 @@ function MainAppRoutes() {
           {/* Route Home */}
           <Route path="/home" element={<Home />} />
 
+          {/* Route Warehouses */}
+          <Route path="/system/warehouse/warehouse" element={<KhoHang />} />
+
           {/* Route Suppliers */}
           <Route path="/system/warehouse/suppliers" element={<NhaCungCap />} />
 
@@ -103,12 +110,17 @@ function MainAppRoutes() {
           <Route path="/system/crm/quotations" element={<BaoGia />} />
           <Route path="/system/crm/quotation_detail" element={<ChiTietBaoGia />} />
           <Route path="/system/crm/auto_number_quote" element={<BaoGiaSo />} />
+          <Route path="/system/crm/auto_number_quote/:so_bao_gia" element={<BaoGiaSo />} />
           
           {/* Route Potential Customer */}
           <Route path="/system/crm/opportunity_source" element={<NguonCoHoi />} />
           <Route path="/system/crm/customer_group" element={<NhomKhachHang />} />
           <Route path="/system/crm/potential_customer" element={<KhachHangTiemNang />} />
-      
+
+          {/* Route Customer Interaction */}
+          <Route path="/system/crm/interaction_type" element={<LoaiTuongTac />} />
+          <Route path="/system/crm/customer_interaction" element={<ChamSocKhachHang />} />
+
           {/* Route Products */}
           <Route path="/system/warehouse/product_type" element={<LoaiHang />} />
           <Route path="/system/warehouse/products" element={<HangHoa />} />
@@ -127,15 +139,18 @@ function MainAppRoutes() {
           <Route path="/system/warehouse/inventory_with_month" element={<TonKhoThang />} />
 
           {/* Route Order */}
-          <Route path="/system/warehouse/order" element={<DonHang />} />
-          <Route path="/system/warehouse/order_detail" element={<ChiTietDonHang />} />
-          <Route path="/system/warehouse/order_detail_with_month" element={<CTDHThang />} />
-          <Route path="/system/warehouse/order_detail_with_customer" element={<CTDHKhachHang />} />
+          <Route path="/system/crm/order" element={<DonHang />} />
+          <Route path="/system/crm/order_detail" element={<ChiTietDonHang />} />
+          <Route path="/system/crm/order_detail_with_month" element={<CTDHThang />} />
+          <Route path="/system/crm/order_detail_with_customer" element={<CTDHKhachHang />} />
 
           {/* Route Administration */}
           <Route path="/system/admin/login_history" element={<LichSuDangNhap />} />
           <Route path="/system/admin/role" element={<VaiTro />} />
           <Route path="/system/admin/accounts" element={<TaiKhoan />} />
+
+          {/* Route Report */}
+          <Route path="/system/warehouse/warehouse_report" element={<BaoCaoKhoHang />} />
         
           {/* Route 404 hoặc catch-all (tùy chọn) */}
           <Route path="*" element={<Home />} /> {/* Hoặc redirect đến trang 404 */}

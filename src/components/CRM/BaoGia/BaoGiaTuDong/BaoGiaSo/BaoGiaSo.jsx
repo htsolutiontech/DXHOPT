@@ -1,18 +1,112 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Tabs, Button, message, Modal } from 'antd';
+import { fetchDataList } from '../../../../utils/api/requestHelpers';
+import { DownloadOutlined } from '@ant-design/icons';
 import BaoGiaThongTinForm from './BaoGiaThongTinForm';
 import BaoGiaHangHoaTable from './BaoGiaHangHoaTable';
-import { DownloadOutlined } from '@ant-design/icons';
 import { exportQuotationWord } from './Function/exportQuotationWord';
 import { exportQuotationPDF } from './Function/exportQuotationPDF';
 import { handleCreateQuotation } from './Function/BaoGiaSo_Add_BG';
 import { handleCreateQuotationDetails } from './Function/BaoGiaSo_Add_CTBG';
+import { calcDonGia } from './HangHoa/hangHoaHelpers';
 
 const BaoGiaSo = () => {
+  const { so_bao_gia } = useParams();
+  const isEdit = !!so_bao_gia;
   const [thongTin, setThongTin] = useState({});
   const [hangHoa, setHangHoa] = useState([]);
   const [heSo, setHeSo] = useState(1);
   const [activeTab, setActiveTab] = useState('1');
+
+  // Thêm đoạn này ngay sau khai báo useState
+  useEffect(() => {
+    // Khi thongTin.he_so thay đổi, cập nhật lại state heSo
+    if (thongTin && thongTin.he_so) {
+      setHeSo(Number(thongTin.he_so));
+    }
+  }, [thongTin.he_so]);
+
+  useEffect(() => {
+    if (so_bao_gia) {
+      const fetchData = async () => {
+        // Lấy thông tin báo giá
+        const quotations = await fetchDataList('https://dx.hoangphucthanh.vn:3000/crm/quotations');
+        const q = quotations.find(q => q.so_bao_gia === so_bao_gia);
+
+        // Lấy danh mục loại báo giá và trạng thái báo giá
+        const quotationTypes = await fetchDataList('https://dx.hoangphucthanh.vn:3000/crm/quotation-types');
+        const quotationStatuses = await fetchDataList('https://dx.hoangphucthanh.vn:3000/crm/quotation-statuses');
+
+        if (q) {
+          setThongTin({
+            so_bao_gia: q.so_bao_gia,
+            ngay_bao_gia: q.ngay_bao_gia,
+            hang_chu_so_huu: q.hang_chu_so_huu,
+            price_list: q.price_list,
+            tieu_de: q.tieu_de,
+            doi_tuong_bao_gia: q.doi_tuong, // map đúng field
+            he_so: q.he_so,
+            sdt: q.so_dien_thoai,
+            kinh_gui: q.ten_khach_hang,
+            ten_file_bao_gia: q.ten_file_bao_gia,
+            noi_dung_bao_gia: q.noi_dung,
+            dieu_kien_thuong_mai: q.dieu_kien_thuong_mai,
+            ghi_chu: q.ghi_chu,
+            nguoi_lien_he: q.nguoi_lien_he,
+            loai_bao_gia: quotationTypes.find(t => t.ma_loai_bao_gia === q.loai_bao_gia)?.loai_bao_gia || q.loai_bao_gia,
+            tinh_trang: quotationStatuses.find(s => s.ma_trang_thai_bao_gia === q.tinh_trang)?.trang_thai_bao_gia || q.tinh_trang,
+          });
+        }
+
+        // Lấy danh sách sản phẩm để lấy giá gốc
+        const products = await fetchDataList('https://dx.hoangphucthanh.vn:3000/warehouse/products');
+
+        // Lấy chi tiết hàng hóa
+        const details = await fetchDataList('https://dx.hoangphucthanh.vn:3000/crm/quotation-details');
+        const chiTiet = details
+          .filter(d => d.so_bao_gia === so_bao_gia)
+          .map(d => {
+            // Lấy giá gốc từ bảng sản phẩm
+            const prod = products.find(
+              p => p.ma_hang === d.ma_hang && p.price_list === q.price_list
+            );
+            const gia_thuc = prod?.gia_thuc || 0;
+
+            const ty_le_thue_gtgt = Number(d.ty_le_thue_gtgt) || 0.05;
+            const ty_le_thue_nk = Number(d.ty_le_thue_nhap_khau) || 0;
+            const chiet_khau = Number(d.chiet_khau) || 0;
+            const so_luong = Number(d.so_luong) || 1;
+
+            // Tính lại đơn giá, thành tiền, thuế, tổng cộng
+            const don_gia = calcDonGia(gia_thuc, q.he_so, ty_le_thue_nk, ty_le_thue_gtgt, chiet_khau);
+            const thanh_tien = don_gia * so_luong;
+            const thue_gtgt = thanh_tien * ty_le_thue_gtgt;
+            const tong_cong = thanh_tien + thue_gtgt;
+
+            return {
+              mo_ta: d.mo_ta,
+              ma_hang: d.ma_hang,
+              don_vi_ban_hang: d.don_vi_tinh,
+              hang_chu_so_huu: d.hang_chu_so_huu,
+              nuoc_xuat_xu: d.xuat_xu,
+              gia_thuc,
+              so_luong,
+              don_gia,
+              thanh_tien,
+              thue_gtgt,
+              tong_cong,
+              ty_le_thue_gtgt,
+              ty_le_thue_nk,
+              chiet_khau,
+              ghi_chu: d.ghi_chu,
+            };
+          });
+        setHangHoa(chiTiet);
+      };
+      fetchData();
+    }
+  }, [so_bao_gia]);
 
   // Các trường bắt buộc
   const requiredFields = [
@@ -89,7 +183,7 @@ const BaoGiaSo = () => {
     <div>
       <Tabs activeKey={activeTab} onChange={setActiveTab}>
         <Tabs.TabPane tab="Thông tin" key="1">
-          <BaoGiaThongTinForm onChange={handleThongTinChange} />
+          <BaoGiaThongTinForm onChange={handleThongTinChange} initialValues={thongTin} isEdit={isEdit}/>
         </Tabs.TabPane>
         <Tabs.TabPane
           tab="Hàng hóa"

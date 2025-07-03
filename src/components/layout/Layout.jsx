@@ -58,9 +58,7 @@ function LayoutApp(props) {
       <Menu.Item key="dashboard" icon={<AppstoreOutlined />}>
         <NavLink to="/home">Trang chủ</NavLink>
       </Menu.Item>,
-      <Menu.Item key="warehouse" icon={<InboxOutlined />} disabled>
-        Kho hàng
-      </Menu.Item>,
+      <Menu.Item key="/warehouse" icon={<InboxOutlined />}><NavLink to="/system/warehouse/warehouse">Kho hàng</NavLink></Menu.Item>,
       <SubMenu
         key="suppliers"
         icon={<SolutionOutlined />}
@@ -109,20 +107,7 @@ function LayoutApp(props) {
         <Menu.Item key="/inventory"><NavLink to="/system/warehouse/inventory">Tồn kho</NavLink></Menu.Item>
         <Menu.Item key="/inventory_with_month"><NavLink to="/system/warehouse/inventory_with_month">Thống kê hàng nhập và xuất theo tháng</NavLink></Menu.Item>
       </SubMenu>,
-      <SubMenu
-        key="order"
-        icon={<ShoppingCartOutlined />}
-        title="Đặt Hàng"
-        onTitleClick={() => navigation('/system/warehouse/order_detail')}
-      >
-        <Menu.Item key="/order"><NavLink to="/system/warehouse/order">Đơn hàng</NavLink></Menu.Item>
-        <Menu.Item key="/order_detail"><NavLink to="/system/warehouse/order_detail">Chi tiết đơn hàng</NavLink></Menu.Item>
-        <Menu.Item key="/order_detail_with_month"><NavLink to="/system/warehouse/order_detail_with_month">Thống kê hàng đặt theo tháng</NavLink></Menu.Item>
-        <Menu.Item key="/order_detail_with_customer"><NavLink to="/system/warehouse/order_detail_with_customer">Thống kê hàng đặt theo khách hàng</NavLink></Menu.Item>
-      </SubMenu>,
-      <Menu.Item key="/report_warehouse" icon={<BarChartOutlined />} disabled>
-        Báo cáo Kho Hàng
-      </Menu.Item>,
+      <Menu.Item key="/warehouse_report" icon={<BarChartOutlined />}><NavLink to="/system/warehouse/warehouse_report">Báo cáo Kho Hàng</NavLink></Menu.Item>,
       <SubMenu
         key="user"
         icon={
@@ -183,16 +168,27 @@ function LayoutApp(props) {
       >
         <Menu.Item key="/opportunity_source"><NavLink to="/system/crm/opportunity_source">Nguồn cơ hội</NavLink></Menu.Item>
         <Menu.Item key="/customer_group"><NavLink to="/system/crm/customer_group">Nhóm khách hàng</NavLink></Menu.Item>
-        <Menu.Item key="/potential_customer" disabled>Khách hàng tiềm năng</Menu.Item>
+        <Menu.Item key="/potential_customer"><NavLink to="/system/crm/potential_customer">Khách hàng tiềm năng</NavLink></Menu.Item>
       </SubMenu>,
       <SubMenu
         key="customer_interactions"
         icon={<SmileOutlined />}
         title="Chăm sóc khách hàng"
-        disabled
+        onTitleClick={() => navigation('/system/crm/customer_interaction')}
       >
-        <Menu.Item key="/interaction_type" disabled>Loại tương tác</Menu.Item>
-        <Menu.Item key="/customer_interactions" disabled>Chăm sóc khách hàng</Menu.Item>
+        <Menu.Item key="/interaction_type"><NavLink to="/system/crm/interaction_type">Loại tương tác</NavLink></Menu.Item>
+        <Menu.Item key="/customer_interaction"><NavLink to="/system/crm/customer_interaction">Chăm sóc khách hàng</NavLink></Menu.Item>
+      </SubMenu>,
+      <SubMenu
+        key="order"
+        icon={<ShoppingCartOutlined />}
+        title="Đặt Hàng"
+        onTitleClick={() => navigation('/system/crm/order_detail')}
+      >
+        <Menu.Item key="/order"><NavLink to="/system/crm/order">Đơn hàng</NavLink></Menu.Item>
+        <Menu.Item key="/order_detail"><NavLink to="/system/crm/order_detail">Chi tiết đơn hàng</NavLink></Menu.Item>
+        <Menu.Item key="/order_detail_with_month"><NavLink to="/system/crm/order_detail_with_month">Thống kê hàng đặt theo tháng</NavLink></Menu.Item>
+        <Menu.Item key="/order_detail_with_customer"><NavLink to="/system/crm/order_detail_with_customer">Thống kê hàng đặt theo khách hàng</NavLink></Menu.Item>
       </SubMenu>,
       <Menu.Item key="crm_report" icon={<PieChartOutlined />} disabled>
         Báo cáo doanh thu

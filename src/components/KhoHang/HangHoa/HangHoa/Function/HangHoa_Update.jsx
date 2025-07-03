@@ -137,7 +137,7 @@ const Editproduct = ({ productId, stt, onCancel, onSuccess }) => {
             </Row>
             <Row gutter={16}>
               <Col span={12}>
-                <Form.Item name="trong_luong_tinh" label="Trọng lượng" rules={[{ required: true }]}>
+                <Form.Item name="trong_luong_tinh" label="Trọng lượng" >
                   <NumericInput style={{ width: '100%' }} />
                 </Form.Item>
               </Col>
@@ -149,12 +149,12 @@ const Editproduct = ({ productId, stt, onCancel, onSuccess }) => {
             </Row>
             <Row gutter={16}>
               <Col span={12}>
-                <Form.Item name="nuoc_xuat_xu" label="Nước xuất xứ" rules={[{ required: true }]}>
+                <Form.Item name="nuoc_xuat_xu" label="Nước xuất xứ" >
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item name="don_vi_ban_hang" label="Đơn vị tính" rules={[{ required: true }]}>
+                <Form.Item name="don_vi_ban_hang" label="Đơn vị tính" >
                   <Select>
                     {['ST', 'PAK'].map(sales_unit => (
                       <Option key={sales_unit} value={sales_unit}>{sales_unit}</Option>
@@ -165,7 +165,7 @@ const Editproduct = ({ productId, stt, onCancel, onSuccess }) => {
             </Row>
             <Row gutter={16}>
               <Col span={8}>
-                <Form.Item name="tinh_trang_hang_hoa" label="Tình trạng" rules={[{ required: true }]}>
+                <Form.Item name="tinh_trang_hang_hoa" label="Tình trạng" >
                   <Select>
                     {['O', 'N'].map(status => (
                       <Option key={status} value={status}>{status}</Option>

@@ -64,6 +64,9 @@ export const validateData = (
     hawb_4: 'invalidHawb4',
     hawb_5: 'invalidHawb5',
     loai_hop_dong: 'invalidLoaiHopDong',
+    nguon_tiep_can: 'invalidNguonTiepCan',
+    nhom_khach_hang: 'invalidNhomKhachHang',
+    loai_tuong_tac: 'invalidLoaiTuongTac',
     ma_hop_dong: 'invalidMaHopDong',
     so_xac_nhan_don_hang: 'invalidSoXacNhanDonHang',
   };
@@ -98,6 +101,12 @@ export const validateData = (
             itemErrors.push(`${getFieldLabel(field, columnMapping)} không tồn tại trong danh sách bill`);
           } else if (field === 'loai_hop_dong') {
             itemErrors.push(`${getFieldLabel(field, columnMapping)} không tồn tại trong danh sách loại hợp đồng`);
+          } else if (field === 'nguon_tiep_can') {
+            itemErrors.push(`${getFieldLabel(field, columnMapping)} không tồn tại trong danh sách nguồn tiếp cận`);
+          } else if (field === 'nhom_khach_hang') {
+            itemErrors.push(`${getFieldLabel(field, columnMapping)} không tồn tại trong danh sách nhóm khách hàng`);
+          } else if (field === 'loai_tuong_tac') {
+            itemErrors.push(`${getFieldLabel(field, columnMapping)} không tồn tại trong danh sách loại tương tác`);
           } else if (field === 'ma_hop_dong') {
             itemErrors.push(`${getFieldLabel(field, columnMapping)} không tồn tại trong danh sách hợp đồng`);
           } else if (field === 'so_xac_nhan_don_hang') {

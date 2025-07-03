@@ -7,6 +7,9 @@ const userFields = ['nguoi_phu_trach', 'nguoi_cap_nhat', 'nguoi_lap_don', 'nguoi
 const productTypeFields = ['ten_loai_hang'];
 const contractTypeFields = ['loai_hop_dong'];
 const quotationTypeFields = ['loai_bao_gia'];
+const sourceFields = ['nguon_tiep_can'];
+const customerGroupFields = ['nhom_khach_hang'];
+const interactionTypeFields = ['loai_tuong_tac'];
 const quotationStatusFields = ['trang_thai_bao_gia'];
 const supplierFields = ['ten_nha_cung_cap'];
 const warehouseFields = ['ten_kho'];
@@ -77,6 +80,27 @@ const mapTenLoaiHopDongToMaLoaiHopDong = (tenLoaiHopDong, contract_types = []) =
   return contract_type ? contract_type.ma_loai_hop_dong : null;
 };
 
+// Ánh xạ tên nguồn sang mã nguồn
+const mapTenNguonToMaNguon = (Nguon, opportunity_sources = []) => {
+  if (!Array.isArray(opportunity_sources)) return null;
+  const opportunity_source = opportunity_sources.find(os => os.nguon === Nguon);
+  return opportunity_source ? opportunity_source.ma_nguon : null;
+};
+
+// Ánh xạ nhóm khách hàng sang mã nhóm khách hàng
+const mapTenNhomKhachHangToMaNhomKhachHang = (NhomKhachHang, customer_groups = []) => {
+  if (!Array.isArray(customer_groups)) return null;
+  const customer_group = customer_groups.find(os => os.nhom_khach_hang === NhomKhachHang);
+  return customer_group ? customer_group.ma_nhom_khach_hang : null;
+};
+
+// Ánh xạ loại tương tác sang mã loại tương tác
+const mapLoaiTuongTacToMaLoaiTuongTac = (LoaiTuongTac, interaction_types = []) => {
+  if (!Array.isArray(interaction_types)) return null;
+  const interaction_type = interaction_types.find(it => it.loai_tuong_tac === LoaiTuongTac);
+  return interaction_type ? interaction_type.ma_loai_tuong_tac : null;
+};
+
 // Ánh xạ tên loại báo giá sang mã loại báo giá
 const mapLoaiBaoGiaToMaLoaiBaoGia = (LoaiBaoGia, quotation_types = []) => {
   if (!Array.isArray(quotation_types)) return null;
@@ -113,6 +137,9 @@ export const handleFileUpload = (file, {
   contract_types,
   contracts,
   orders,
+  opportunity_sources,
+  customer_groups,
+  interaction_types,
   quotation_types,
   quotation_statuses,
   defaultFields = {},
@@ -242,6 +269,33 @@ export const handleFileUpload = (file, {
               item[apiField] = maLoaiHopDong || null;
               if (!maLoaiHopDong && value) item[getInvalidKey(apiField)] = true;
             } else if (mode === 'loaihopdong') {
+              item[apiField] = value;
+            }
+          } // Xử lý các trường nguồn cơ hội
+          else if (sourceFields.includes(apiField)) {
+            if (mode === 'khachhangtiemnang') {
+              const maNguon = mapTenNguonToMaNguon(value, opportunity_sources);
+              item[apiField] = maNguon || null;
+              if (!maNguon && value) item[getInvalidKey(apiField)] = true;
+            } else if (mode === 'nguoncohoi') {
+              item[apiField] = value;
+            }
+          } // Xử lý các trường nhóm khách hàng
+          else if (customerGroupFields.includes(apiField)) {
+            if (mode === 'khachhangtiemnang') {
+              const maNhomKhachHang = mapTenNhomKhachHangToMaNhomKhachHang(value, customer_groups);
+              item[apiField] = maNhomKhachHang || null;
+              if (!maNhomKhachHang && value) item[getInvalidKey(apiField)] = true;
+            } else if (mode === 'nhomkhachhang') {
+              item[apiField] = value;
+            }
+          } // Xử lý các trường nhóm khách hàng
+          else if (interactionTypeFields.includes(apiField)) {
+            if (mode === 'tuongtackhachhang') {
+              const maLoaiTuongTac = mapLoaiTuongTacToMaLoaiTuongTac(value, interaction_types);
+              item[apiField] = maLoaiTuongTac || null;
+              if (!maLoaiTuongTac && value) item[getInvalidKey(apiField)] = true;
+            } else if (mode === 'loaituongtac') {
               item[apiField] = value;
             }
           } // Xử lý các trường loại báo giá

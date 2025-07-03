@@ -3,6 +3,7 @@ import { Form, Input, DatePicker, Select, Row, Col, Card } from 'antd';
 import { fetchAndSetList } from '../../../../utils/api/fetchHelpers';
 import moment from 'moment';
 import '../../../../utils/css/Custom-Quotation.css';
+import { getHeSoListByDoiTuong, handleThongTinFormChange } from './ThongTin/thongTinHelpers';
 
 const DEFAULT_DIEU_KIEN = `- Giá trên đã bao gồm thuế GTGT, phí vận chuyển và các phí khác (nếu có).
 - Trong trường hợp chính sách thuế thay đổi, khoản thuế GTGT sẽ được điều chỉnh tương ứng.
@@ -25,11 +26,13 @@ const DEFAULT_NOI_DUNG = `Công ty TNHH DV và TM Hoàng Phúc Thanh (HOPT) châ
 
 const { Option } = Select;
 
-const BaoGiaThongTinForm = ({ onChange }) => {
+const BaoGiaThongTinForm = ({ onChange, initialValues, isEdit }) => {
   const [form] = Form.useForm();
   const [priceLists, setPriceLists] = useState([]);
   const [hangChuSoHuu, setHangChuSoHuu] = useState([]);
   const [heSoList, setHeSoList] = useState([64000, 65000, 66000]);
+
+
 
   useEffect(() => {
     fetchAndSetList(
@@ -54,6 +57,27 @@ const BaoGiaThongTinForm = ({ onChange }) => {
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    if (initialValues) {
+      let values = { ...initialValues };
+      // Ép kiểu ngày về moment nếu có
+      if (values.ngay_bao_gia && !moment.isMoment(values.ngay_bao_gia)) {
+        values.ngay_bao_gia = moment(values.ngay_bao_gia);
+      }
+      form.setFieldsValue({
+        ...{
+          ngay_bao_gia: moment(),
+          doi_tuong_bao_gia: 'Giá kế hoạch',
+          he_so: 64000,
+          dieu_kien_thuong_mai: DEFAULT_DIEU_KIEN,
+          noi_dung_bao_gia: DEFAULT_NOI_DUNG,
+          hang_chu_so_huu: 'Karl Storz',
+        },
+        ...values
+      });
+    }
+  }, [initialValues]);
+
   const doiTuongBaoGia = [
     'Giá kế hoạch',
     'Bệnh viện Tư',
@@ -63,33 +87,7 @@ const BaoGiaThongTinForm = ({ onChange }) => {
   ];
 
   const handleValuesChange = (changed, values) => {
-    if (changed.doi_tuong_bao_gia) {
-      let hs = [];
-      switch (changed.doi_tuong_bao_gia) {
-        case 'Giá kế hoạch':
-          hs = [64000, 65000, 66000];
-          break;
-        case 'Bệnh viện Tư':
-          hs = [50000, 51000, 52000, 53000, 54000, 55000, 56000];
-          break;
-        case 'Bệnh viện Công':
-          hs = [55000, 56000, 57000, 58000, 59000, 60000];
-          break;
-        case 'Công ty Thầu':
-          hs = [47000, 48000, 49000, 50000];
-          break;
-        case 'Tập Đoàn Hoàn Mỹ':
-          hs = [47000];
-          break;
-        default:
-          hs = [];
-      }
-      setHeSoList(hs);
-      form.setFieldsValue({ he_so: hs[0] });
-      onChange({ ...values, he_so: hs[0] });
-    } else {
-      onChange(values);
-    }
+    handleThongTinFormChange(changed, values, setHeSoList, form, onChange);
   };
 
   return (
@@ -100,19 +98,22 @@ const BaoGiaThongTinForm = ({ onChange }) => {
         layout="vertical"
         onValuesChange={handleValuesChange}
         initialValues={{
-          ngay_bao_gia: moment(),
-          doi_tuong_bao_gia: 'Giá kế hoạch',
-          he_so: 64000,
-          dieu_kien_thuong_mai: DEFAULT_DIEU_KIEN,
-          noi_dung_bao_gia: DEFAULT_NOI_DUNG,
-          hang_chu_so_huu: 'Karl Storz',
+          ...{
+            ngay_bao_gia: moment(),
+            doi_tuong_bao_gia: 'Giá kế hoạch',
+            he_so: 64000,
+            dieu_kien_thuong_mai: DEFAULT_DIEU_KIEN,
+            noi_dung_bao_gia: DEFAULT_NOI_DUNG,
+            hang_chu_so_huu: 'Karl Storz',
+          },
+          ...initialValues // Ưu tiên giá trị từ initialValues
         }}
         className="quotation-form"
       >
         <Row gutter={16}>
           <Col span={6}>
             <Form.Item label="Số báo giá" name="so_bao_gia" rules={[{ required: true }]}>
-              <Input style={{ width: '100%' }} />
+              <Input style={{ width: '100%' }} disabled={isEdit} />
             </Form.Item>
           </Col>
           <Col span={6}>

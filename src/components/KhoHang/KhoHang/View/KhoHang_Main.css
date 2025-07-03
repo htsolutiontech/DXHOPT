@@ -1,0 +1,15 @@
+
+/* Fix Ant Design input text color globally for all input, textarea, select, picker */
+input.ant-input, textarea.ant-input, .ant-select-selection-item, .ant-picker-input input {
+  color: #000 !important;
+}
+
+/* For dropdown options */
+.ant-select-dropdown .ant-select-item {
+  color: #000 !important;
+}
+
+/* For placeholder text */
+input.ant-input::placeholder, textarea.ant-input::placeholder {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
